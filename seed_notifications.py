@@ -348,6 +348,11 @@ def seed_notifications():
         db.close()
 
 
+def seed():
+    """Alias for seed_master.py compatibility."""
+    seed_notifications()
+
+
 if __name__ == '__main__':
     print("Seeding notification data...\n")
     seed_notifications()

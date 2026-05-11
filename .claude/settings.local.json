@@ -22,7 +22,8 @@
       "Bash(ls \"C:/Users/aasha/OneDrive - Patriot Tech Systems Consulting LLC \\(1\\)/dev/FieldServicePro/\"favicon*)",
       "Read(//c/c/Users/dada_/OneDrive - Patriot Tech Systems Consulting LLC/dev/FieldServicePro/web/static/css/**)",
       "mcp__plugin_context7_context7__resolve-library-id",
-      "mcp__plugin_context7_context7__query-docs"
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(cd:*)"
     ]
   }
 }

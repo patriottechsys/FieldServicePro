@@ -23,17 +23,18 @@ def seed():
         today = date.today()
 
         # ── Demo Tech User ──
-        user = db.query(User).filter_by(username='tech_demo').first()
+        user = db.query(User).filter_by(email='tech@demo.4manservicespro.com').first()
         if not user:
             from werkzeug.security import generate_password_hash
+            org = db.query(User).first()
             user = User(
-                username='tech_demo',
-                email='tech@demo.fieldservicepro.com',
+                email='tech@demo.4manservicespro.com',
                 password_hash=generate_password_hash('demo123'),
                 first_name='Alex',
                 last_name='Demo',
                 role='technician',
                 is_active=True,
+                organization_id=org.organization_id if org else 1,
             )
             db.add(user)
             db.flush()
@@ -44,10 +45,14 @@ def seed():
         # ── Link Technician profile ──
         tech = db.query(Technician).filter_by(user_id=user.id).first()
         if not tech:
+            from models.division import Division
+            div = db.query(Division).first()
             tech = Technician(
                 first_name='Alex', last_name='Demo',
-                user_id=user.id, status='active',
-                phone='555-000-1234', email='tech@demo.fieldservicepro.com',
+                user_id=user.id, is_active=True,
+                organization_id=user.organization_id,
+                division_id=div.id if div else 1,
+                phone='555-000-1234', email='tech@demo.4manservicespro.com',
             )
             db.add(tech)
             db.flush()
@@ -57,6 +62,7 @@ def seed():
         client = db.query(Client).filter_by(company_name='Demo Client Corp').first()
         if not client:
             client = Client(
+                organization_id=user.organization_id,
                 company_name='Demo Client Corp',
                 client_type='commercial',
                 phone='555-100-2000',
@@ -85,6 +91,8 @@ def seed():
             ).first()
             if not existing:
                 job = Job(
+                    organization_id=user.organization_id,
+                    division_id=tech.division_id,
                     title=jd['title'],
                     description=jd['desc'],
                     status=jd['status'],
@@ -145,7 +153,7 @@ def seed():
 
         db.commit()
         print('\nMobile demo data seeded!')
-        print('  Login: username=tech_demo  password=demo123')
+        print('  Login: email=tech@demo.4manservicespro.com  password=demo123')
         print(f'  {len(jobs)} jobs for {today}')
 
     except Exception as e:

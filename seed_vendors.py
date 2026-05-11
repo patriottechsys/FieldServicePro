@@ -259,6 +259,11 @@ def seed_vendors():
         db.close()
 
 
+def seed():
+    """Alias for seed_master.py compatibility."""
+    seed_vendors()
+
+
 if __name__ == '__main__':
     print("Seeding vendor data...")
     seed_vendors()
