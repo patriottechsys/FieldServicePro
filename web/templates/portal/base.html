@@ -18,8 +18,9 @@
     {# ── Top Navigation ── #}
     <nav class="navbar navbar-expand-lg portal-navbar">
         <div class="container-fluid px-3">
-            <a class="navbar-brand" href="{{ url_for('portal.portal_dashboard') }}">
-                <i class="bi bi-tools"></i> Client Portal
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('portal.portal_dashboard') }}">
+                <svg width="26" height="26" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="64" height="64" rx="9" fill="#0d1b3d"/><g fill="#e3b53a" transform="translate(32 32)">{% for i in range(12) %}<rect x="-3.5" y="-26" width="7" height="9" rx="1.5" transform="rotate({{ i * 30 }})"/>{% endfor %}</g><circle cx="32" cy="32" r="9" fill="#e3b53a"/><circle cx="32" cy="32" r="3.5" fill="#0d1b3d"/></svg>
+                <span>Client Portal</span>
             </a>
 
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#portalNav">
