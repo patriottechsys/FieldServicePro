@@ -162,6 +162,10 @@ def get_feedback_stats(db):
         FeedbackSurvey.status == 'completed',
         FeedbackSurvey.would_recommend == True,
     ).count()
+    recommend_answered = db.query(FeedbackSurvey).filter(
+        FeedbackSurvey.status == 'completed',
+        FeedbackSurvey.would_recommend.isnot(None),
+    ).count()
 
     pending = db.query(FeedbackSurvey).filter(
         FeedbackSurvey.status.in_(['sent', 'opened']),
@@ -200,7 +204,7 @@ def get_feedback_stats(db):
         'nps_score': nps_score,
         'total_reviews': total,
         'response_rate': response_rate,
-        'would_recommend_pct': round((recommend_yes / total) * 100) if total else None,
+        'would_recommend_pct': int((recommend_yes / recommend_answered) * 100) if recommend_answered else None,
         'pending_count': pending,
         'follow_up_needed': follow_up_needed,
         'negative_30d': negative_30d,

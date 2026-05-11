@@ -24,11 +24,13 @@
     <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);">{{ s.sent_at.strftime('%b %d, %H:%M') if s.sent_at else '' }}</td>
     <td style="padding:var(--space-2) var(--space-3);"><span style="font-size:var(--font-size-xs);padding:2px 8px;border-radius:var(--radius-sm);background:{% if s.status == 'opened' %}var(--color-accent){% else %}var(--color-surface-raised){% endif %};color:{% if s.status == 'opened' %}#fff{% else %}inherit{% endif %};">{{ s.status|title }}</span></td>
     <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);">{% if s.reminder_sent %}<span style="color:var(--color-success);"><i class="bi bi-check"></i> Sent</span>{% else %}<span style="color:var(--color-text-muted);">Not sent</span>{% endif %}</td>
-    <td style="padding:var(--space-2) var(--space-3);display:flex;gap:4px;">
+    <td style="padding:var(--space-2) var(--space-3);">
+      <div style="display:flex;gap:4px;">
       {% if not s.reminder_sent %}
       <form method="POST" action="{{ url_for('feedback.send_reminder', survey_id=s.id) }}" style="display:inline;"><button type="submit" class="btn btn-ghost" style="font-size:var(--font-size-xs);"><i class="bi bi-envelope"></i> Remind</button></form>
       {% endif %}
       <form method="POST" action="{{ url_for('feedback.cancel_survey', survey_id=s.id) }}" style="display:inline;" onsubmit="return confirm('Cancel this survey?')"><button type="submit" class="btn btn-ghost" style="font-size:var(--font-size-xs);color:var(--color-danger);"><i class="bi bi-x"></i></button></form>
+      </div>
     </td>
   </tr>{% endfor %}</tbody>
 </table>

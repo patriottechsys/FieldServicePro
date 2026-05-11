@@ -26,7 +26,7 @@
       ('include_what_could_improve', 'What Could Improve'),
     ] %}
     {% for name, label in checks %}
-    <div style="margin-bottom:8px;"><label style="display:flex;align-items:center;gap:8px;font-size:var(--font-size-sm);"><input type="checkbox" name="{{ name }}" {{ 'checked' if not tmpl or getattr(tmpl, name, True) }}> {{ label }}</label></div>
+    <div style="margin-bottom:8px;"><label style="display:flex;align-items:center;gap:8px;font-size:var(--font-size-sm);"><input type="checkbox" name="{{ name }}" {{ 'checked' if not tmpl or tmpl[name] }}> {{ label }}</label></div>
     {% endfor %}
   </div>
 

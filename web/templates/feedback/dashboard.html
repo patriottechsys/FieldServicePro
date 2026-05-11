@@ -14,7 +14,7 @@
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3);margin-bottom:var(--space-4);">
   <div class="card" style="padding:var(--space-3);text-align:center;">
     <div style="font-size:2rem;font-weight:700;color:var(--color-warning);">{% if stats.avg_overall %}{{ "%.1f"|format(stats.avg_overall) }}{% else %}&mdash;{% endif %}</div>
-    <div style="color:var(--color-warning);">{% if stats.avg_overall %}{% for i in range(1,6) %}{{ '&#9733;' if i <= (stats.avg_overall|round) else '&#9734;' }}{% endfor %}{% endif %}</div>
+    <div style="color:var(--color-warning);">{% if stats.avg_overall %}{% for i in range(1,6) %}{% if i <= (stats.avg_overall|round) %}&#9733;{% else %}<span style="color:var(--color-text-muted);">&#9734;</span>{% endif %}{% endfor %}{% endif %}</div>
     <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Average Rating</div>
   </div>
   <div class="card" style="padding:var(--space-3);text-align:center;">

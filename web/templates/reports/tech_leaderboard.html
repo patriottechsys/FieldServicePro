@@ -189,13 +189,13 @@ function renderTechModal(data){
   var t=data.tech,s=data.score,tr=data.trend;
   document.getElementById('modal-tech-name').textContent=t.name+(s.rank?' — Rank #'+s.rank:'');
   var metrics=[
-    {l:'Customer Rating',k:'customer_rating_score',i:'&#9733;'},
-    {l:'Completion Rate',k:'completion_rate_score',i:'&#9989;'},
-    {l:'Callback Rate',k:'callback_rate_score',i:'&#128260;'},
-    {l:'Utilization',k:'utilization_score',i:'&#9201;'},
-    {l:'Revenue',k:'revenue_score',i:'&#128176;'},
-    {l:'Efficiency',k:'efficiency_score',i:'&#9889;'},
-    {l:'Profitability',k:'profitability_score',i:'&#128202;'},
+    {l:'Customer Rating',k:'customer_rating_score',i:'\u2605'},
+    {l:'Completion Rate',k:'completion_rate_score',i:'\u2705'},
+    {l:'Callback Rate',k:'callback_rate_score',i:'\uD83D\uDD04'},
+    {l:'Utilization',k:'utilization_score',i:'\u23F1'},
+    {l:'Revenue',k:'revenue_score',i:'\uD83D\uDCB0'},
+    {l:'Efficiency',k:'efficiency_score',i:'\u26A1'},
+    {l:'Profitability',k:'profitability_score',i:'\uD83D\uDCCA'},
   ];
   var bars=metrics.map(function(m){
     var v=s[m.k]||0;

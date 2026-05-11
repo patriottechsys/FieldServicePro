@@ -639,7 +639,7 @@
       <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;">
         <div>
           <span style="color:var(--color-warning);font-size:1.3rem;">{% for i in range(survey.overall_rating or 0) %}&#9733;{% endfor %}{% for i in range(5 - (survey.overall_rating or 0)) %}<span style="color:var(--color-text-muted);">&#9734;</span>{% endfor %}</span>
-          <strong style="margin-left:4px;">{{ survey.overall_rating }}/5</strong>
+          <strong style="margin-left:4px;">{{ survey.overall_rating or '?' }}/5</strong>
         </div>
         {% if survey.nps_score is not none %}
         <span style="font-size:var(--font-size-xs);padding:2px 8px;border-radius:10px;color:#fff;background:{% if survey.nps_category == 'promoter' %}var(--color-success){% elif survey.nps_category == 'passive' %}var(--color-warning){% else %}var(--color-danger){% endif %};">NPS {{ survey.nps_score }}</span>

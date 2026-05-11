@@ -52,7 +52,7 @@
                         ] %}
                         <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-2);">
                             <input type="checkbox" name="{{ field }}" style="accent-color:var(--color-accent);"
-                                   {{ 'checked' if settings[field] is defined and settings[field] else 'checked' if getattr(settings, field, False) }}>
+                                   {{ 'checked' if settings and settings[field] }}>
                             {{ label }}
                         </label>
                         {% endfor %}
@@ -72,7 +72,7 @@
                         ] %}
                         <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-2);">
                             <input type="checkbox" name="{{ field }}" style="accent-color:var(--color-accent);"
-                                   {{ 'checked' if getattr(settings, field, False) }}>
+                                   {{ 'checked' if settings and settings[field] }}>
                             {{ label }}
                         </label>
                         {% endfor %}
