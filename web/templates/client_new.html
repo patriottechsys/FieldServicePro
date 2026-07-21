@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ url_for('create_client_full') }}" id="clientForm">
+<form method="POST" action="{{ url_for('clients_bp.create_client_full') }}" id="clientForm">
 <div class="client-form-container">
 
     <!-- ── Primary Contact Details ── -->
@@ -227,7 +227,7 @@
 
     <!-- ── Actions ── -->
     <div class="form-actions">
-        <a href="{{ url_for('clients_page') }}" class="btn btn-outline">Cancel</a>
+        <a href="{{ url_for('clients_bp.clients_page') }}" class="btn btn-outline">Cancel</a>
         <button type="submit" name="action" value="save_and_new" class="btn btn-outline">
             <i class="bi bi-plus-lg"></i> Save and Create Another
         </button>

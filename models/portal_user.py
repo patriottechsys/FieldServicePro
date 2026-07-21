@@ -1,5 +1,5 @@
 """Portal user model for client-facing authentication and access control."""
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Table
@@ -85,41 +85,43 @@ class PortalUser(Base):
 
     def generate_reset_token(self):
         self.password_reset_token = secrets.token_urlsafe(48)
-        self.password_reset_expiry = datetime.utcnow() + timedelta(hours=24)
+        self.password_reset_expiry = datetime.now(timezone.utc) + timedelta(hours=24)
         return self.password_reset_token
 
     def generate_invitation_token(self):
         self.invitation_token = secrets.token_urlsafe(48)
-        self.invitation_expiry = datetime.utcnow() + timedelta(days=7)
+        self.invitation_expiry = datetime.now(timezone.utc) + timedelta(days=7)
         return self.invitation_token
 
     def validate_reset_token(self, token):
-        return (
-            self.password_reset_token == token
-            and self.password_reset_expiry
-            and self.password_reset_expiry > datetime.utcnow()
-        )
+        if self.password_reset_token != token or not self.password_reset_expiry:
+            return False
+        expiry = self.password_reset_expiry
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
+        return expiry > datetime.now(timezone.utc)
 
     def validate_invitation_token(self, token):
-        return (
-            self.invitation_token == token
-            and self.invitation_expiry
-            and self.invitation_expiry > datetime.utcnow()
-        )
+        if self.invitation_token != token or not self.invitation_expiry:
+            return False
+        expiry = self.invitation_expiry
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
+        return expiry > datetime.now(timezone.utc)
 
     def record_login(self):
-        self.last_login = datetime.utcnow()
+        self.last_login = datetime.now(timezone.utc)
         self.login_attempts = 0
         self.locked_until = None
 
     def record_failed_login(self):
         self.login_attempts += 1
         if self.login_attempts >= 5:
-            self.locked_until = datetime.utcnow() + timedelta(minutes=15)
+            self.locked_until = datetime.now(timezone.utc) + timedelta(minutes=15)
 
     @property
     def is_locked(self):
-        if self.locked_until and self.locked_until > datetime.utcnow():
+        if self.locked_until and self.locked_until > datetime.now(timezone.utc):
             return True
         return False
 

@@ -5,8 +5,8 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb" style="margin: 0;">
-    <li class="breadcrumb-item"><a href="{{ url_for('jobs_page') }}">Jobs</a></li>
-    <li class="breadcrumb-item"><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.job_number }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('jobs_bp.jobs_page') }}">Jobs</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}">{{ job.job_number }}</a></li>
     <li class="breadcrumb-item active">{{ co.change_order_number }}</li>
   </ol>
 </nav>
@@ -167,7 +167,7 @@
       <div class="card-header"><h3 class="card-title" style="font-size:var(--font-size-sm);"><i class="bi bi-info-circle"></i> Job Context</h3></div>
       <div class="card-body" style="font-size:var(--font-size-sm);">
         <div style="display:grid;grid-template-columns:auto 1fr;gap:4px var(--space-3);">
-          <span style="color:var(--color-text-muted);">Job</span><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.job_number }}</a>
+          <span style="color:var(--color-text-muted);">Job</span><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}">{{ job.job_number }}</a>
           <span style="color:var(--color-text-muted);">Client</span><span>{{ job.client.display_name if job.client else '---' }}</span>
           <span style="color:var(--color-text-muted);">Original Est.</span><span>${{ "{:,.2f}".format(job.original_estimated_cost or job.estimated_amount or 0) }}</span>
           <span style="color:var(--color-text-muted);">Approved COs</span><span>{{ job.total_change_orders }}</span>

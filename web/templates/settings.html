@@ -3,67 +3,75 @@
 {% block title %}Settings - FieldServicePro{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <div>
-        <h1>Settings</h1>
-        <p>Manage your company, divisions, and team</p>
-    </div>
+<div style="margin-bottom:var(--space-4);">
+    <h1 style="margin:0;font-size:var(--font-size-xl);">Settings</h1>
+    <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">Manage your company, divisions, and team</p>
 </div>
 
-<!-- Company Info -->
-<div class="card" style="margin-bottom: 1.5rem;">
-    <div class="card-header"><i class="bi bi-building"></i> Company Information</div>
+<!-- ══════ Company Information ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-building" style="color:var(--color-accent);"></i>
+        <span>Company Information</span>
+    </div>
     <div class="card-body">
-        <div class="form-row">
-            <div class="form-group">
-                <label>Company Name</label>
-                <input type="text" value="{{ organization.name }}" disabled>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+            <div>
+                <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);color:var(--color-text-secondary);">Company Name</label>
+                <div style="padding:var(--space-2) var(--space-3);background:var(--color-surface-raised);border-radius:var(--radius-md);font-size:var(--font-size-sm);">{{ organization.name or '—' }}</div>
             </div>
-            <div class="form-group">
-                <label>Phone</label>
-                <input type="text" value="{{ organization.phone or '' }}" disabled>
+            <div>
+                <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);color:var(--color-text-secondary);">Phone</label>
+                <div style="padding:var(--space-2) var(--space-3);background:var(--color-surface-raised);border-radius:var(--radius-md);font-size:var(--font-size-sm);">{{ organization.phone or '—' }}</div>
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>City</label>
-                <input type="text" value="{{ organization.city or '' }}" disabled>
+            <div>
+                <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);color:var(--color-text-secondary);">City</label>
+                <div style="padding:var(--space-2) var(--space-3);background:var(--color-surface-raised);border-radius:var(--radius-md);font-size:var(--font-size-sm);">{{ organization.city or '—' }}</div>
             </div>
-            <div class="form-group">
-                <label>Province</label>
-                <input type="text" value="{{ organization.province or '' }}" disabled>
+            <div>
+                <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);color:var(--color-text-secondary);">Province</label>
+                <div style="padding:var(--space-2) var(--space-3);background:var(--color-surface-raised);border-radius:var(--radius-md);font-size:var(--font-size-sm);">{{ organization.province or '—' }}</div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Divisions -->
-<div class="card" style="margin-bottom: 1.5rem;">
-    <div class="card-header"><i class="bi bi-grid"></i> Divisions</div>
-    <div class="card-body" style="padding: 0;">
-        <table class="data-table">
+<!-- ══════ Divisions ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-grid" style="color:var(--color-accent);"></i>
+        <span>Divisions</span>
+        <span style="margin-left:auto;font-size:var(--font-size-xs);color:var(--color-text-muted);">{{ all_divisions|length }} total</span>
+    </div>
+    <div style="overflow-x:auto;">
+        {% if all_divisions %}
+        <table style="width:100%;border-collapse:collapse;">
             <thead>
-                <tr>
-                    <th>Division</th>
-                    <th>Code</th>
-                    <th>Color</th>
-                    <th>Status</th>
+                <tr style="border-bottom:2px solid var(--color-border);">
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Division</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Code</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Color</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for div in all_divisions %}
-                <tr>
-                    <td>
-                        <i class="bi {{ div.icon }}" style="color: {{ div.color }}; margin-right: 0.5rem;"></i>
-                        <strong>{{ div.name }}</strong>
+                <tr style="border-bottom:1px solid var(--color-border);">
+                    <td style="padding:var(--space-2) var(--space-3);">
+                        <div style="display:flex;align-items:center;gap:var(--space-2);">
+                            <span style="width:10px;height:10px;border-radius:50%;background:{{ div.color }};flex-shrink:0;"></span>
+                            <span style="font-weight:600;font-size:var(--font-size-sm);">{{ div.name }}</span>
+                        </div>
                     </td>
-                    <td>{{ div.code }}</td>
-                    <td>
-                        <span style="display: inline-block; width: 20px; height: 20px; border-radius: 4px; background: {{ div.color }}; vertical-align: middle;"></span>
-                        {{ div.color }}
+                    <td style="padding:var(--space-2) var(--space-3);font-family:monospace;font-size:var(--font-size-sm);color:var(--color-text-secondary);">{{ div.code }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);">
+                        <div style="display:flex;align-items:center;gap:var(--space-2);">
+                            <span style="width:20px;height:20px;border-radius:var(--radius-sm);background:{{ div.color }};"></span>
+                            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);font-family:monospace;">{{ div.color }}</span>
+                        </div>
                     </td>
-                    <td>
-                        <span class="badge {% if div.is_active %}badge-completed{% else %}badge-draft{% endif %}">
+                    <td style="padding:var(--space-2) var(--space-3);">
+                        <span style="display:inline-block;font-size:var(--font-size-xs);font-weight:600;padding:2px 10px;border-radius:999px;{% if div.is_active %}background:rgba(16,185,129,0.1);color:var(--color-success);{% else %}background:var(--color-surface-raised);color:var(--color-text-muted);{% endif %}">
                             {{ 'Active' if div.is_active else 'Inactive' }}
                         </span>
                     </td>
@@ -71,35 +79,50 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div style="padding:var(--space-6);text-align:center;color:var(--color-text-muted);">
+            <i class="bi bi-grid" style="font-size:2rem;opacity:0.3;display:block;margin-bottom:var(--space-2);"></i>
+            <p style="font-size:var(--font-size-sm);">No divisions configured</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 
-<!-- Technicians -->
-<div class="card">
-    <div class="card-header"><i class="bi bi-people"></i> Technicians</div>
-    <div class="card-body" style="padding: 0;">
+<!-- ══════ Technicians ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-people" style="color:var(--color-accent);"></i>
+        <span>Technicians</span>
+        <span style="margin-left:auto;font-size:var(--font-size-xs);color:var(--color-text-muted);">{{ technicians|length }} total</span>
+    </div>
+    <div style="overflow-x:auto;">
         {% if technicians %}
-        <table class="data-table">
+        <table style="width:100%;border-collapse:collapse;">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Division</th>
-                    <th>Rate</th>
-                    <th>Status</th>
+                <tr style="border-bottom:2px solid var(--color-border);">
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Name</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Email</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Phone</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Division</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Rate</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for tech in technicians %}
-                <tr>
-                    <td><strong>{{ tech.full_name }}</strong></td>
-                    <td style="font-size: 0.85rem;">{{ tech.email or '—' }}</td>
-                    <td style="font-size: 0.85rem;">{{ tech.phone or '—' }}</td>
-                    <td>{{ tech.division_id }}</td>
-                    <td>{{ '$' + tech.hourly_rate|string + '/hr' if tech.hourly_rate else '—' }}</td>
-                    <td>
-                        <span class="badge {% if tech.is_active %}badge-completed{% else %}badge-draft{% endif %}">
+                <tr style="border-bottom:1px solid var(--color-border);">
+                    <td style="padding:var(--space-2) var(--space-3);">
+                        <div style="display:flex;align-items:center;gap:var(--space-2);">
+                            <span style="width:28px;height:28px;border-radius:50%;background:{{ tech.color or 'var(--color-accent)' }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:var(--font-size-xs);font-weight:600;flex-shrink:0;">{{ tech.first_name[0] if tech.first_name else '' }}{{ tech.last_name[0] if tech.last_name else '' }}</span>
+                            <span style="font-weight:600;font-size:var(--font-size-sm);">{{ tech.full_name }}</span>
+                        </div>
+                    </td>
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-secondary);">{{ tech.email or '—' }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-secondary);">{{ tech.phone or '—' }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);">{{ tech.division_name }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-sm);color:var(--color-text-secondary);">{{ '${:,.0f}/hr'.format(tech.hourly_rate) if tech.hourly_rate else '—' }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);">
+                        <span style="display:inline-block;font-size:var(--font-size-xs);font-weight:600;padding:2px 10px;border-radius:999px;{% if tech.is_active %}background:rgba(16,185,129,0.1);color:var(--color-success);{% else %}background:var(--color-surface-raised);color:var(--color-text-muted);{% endif %}">
                             {{ 'Active' if tech.is_active else 'Inactive' }}
                         </span>
                     </td>
@@ -108,253 +131,294 @@
             </tbody>
         </table>
         {% else %}
-        <div class="empty-state">
-            <i class="bi bi-person-plus"></i>
-            <h3>No technicians yet</h3>
-            <p>Add technicians to start assigning jobs</p>
+        <div style="padding:var(--space-6);text-align:center;color:var(--color-text-muted);">
+            <i class="bi bi-person-plus" style="font-size:2rem;opacity:0.3;display:block;margin-bottom:var(--space-2);"></i>
+            <p style="font-size:var(--font-size-sm);">No technicians yet</p>
         </div>
         {% endif %}
     </div>
 </div>
 
-<!-- Invoice Approval Workflow -->
-<div class="card" style="margin-bottom: 1.5rem;" id="approvals">
-  <div class="card-header">
-    <i class="bi bi-clipboard-check" style="color: var(--color-warning);"></i> Invoice Approval Workflow
-  </div>
-  <div class="card-body">
-    <form method="POST" action="{{ url_for('save_approval_settings') }}">
-      <div style="margin-bottom: var(--space-3);">
-        <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
-          <input type="checkbox" id="invoice_approval_enabled" name="invoice_approval_enabled" value="1"
-                 style="width: 1rem; height: 1rem; accent-color: var(--color-accent);"
-                 {% if org_settings and org_settings.invoice_approval_enabled %}checked{% endif %}>
-          <span style="font-weight: var(--font-weight-semibold);">Require approval for commercial invoices</span>
-        </label>
-      </div>
-
-      <div id="approval-options" style="{% if not (org_settings and org_settings.invoice_approval_enabled) %}display: none;{% endif %}">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
-          <div class="form-group">
-            <label class="form-label">Approval Threshold ($)</label>
-            <input type="number" class="form-control" step="0.01" min="0"
-                   name="invoice_approval_threshold"
-                   value="{{ org_settings.invoice_approval_threshold if org_settings and org_settings.invoice_approval_threshold else '' }}"
-                   placeholder="Leave blank = all invoices">
-            <div class="form-text">Leave blank to require approval on all commercial invoices.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Roles That Can Approve</label>
-            <input type="text" class="form-control" name="invoice_approval_roles"
-                   value="{{ org_settings.invoice_approval_roles if org_settings else 'owner,admin' }}">
-            <div class="form-text">Comma-separated (e.g. owner,admin)</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top: var(--space-3);">
-        <button type="submit" class="btn btn-accent btn-sm"><i class="bi bi-save"></i> Save Approval Settings</button>
-        <a href="{{ url_for('approval_queue') }}" class="btn btn-ghost btn-sm" style="margin-left: var(--space-2);">
-          <i class="bi bi-clipboard-check"></i> View Approval Queue
-        </a>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- SLA Management -->
-<div class="card" style="margin-bottom: 1.5rem;">
-  <div class="card-header">
-    <i class="bi bi-shield-check" style="color: var(--color-accent);"></i> SLA Templates
-  </div>
-  <div class="card-body">
-    <p style="color: var(--color-text-secondary); margin-bottom: var(--space-3);">Manage service level agreement templates for contracts.</p>
-    <a href="{{ url_for('sla.sla_list') }}" class="btn btn-ghost btn-sm"><i class="bi bi-arrow-right"></i> Manage SLA Templates</a>
-  </div>
-</div>
-
-<!-- Warranty & Callback Settings -->
-{% if org_settings is defined %}
-<div class="card" style="margin-top:var(--space-4);">
-    <div class="card-header"><h3 class="card-title"><i class="bi bi-shield-check" style="color:var(--color-success);"></i> Warranty Settings</h3></div>
+<!-- ══════ Invoice Approval Workflow ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);" id="approvals">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-clipboard-check" style="color:var(--color-warning);"></i>
+        <span>Invoice Approval Workflow</span>
+    </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('save_warranty_settings') }}">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">Default Labor Warranty (months)</label>
-                    <input type="number" name="default_labor_warranty_months" class="form-control" min="0" value="{{ org_settings.default_labor_warranty_months if org_settings.default_labor_warranty_months else 12 }}">
-                </div>
-                <div class="form-group"><label class="form-label">Default Parts Warranty (months)</label>
-                    <input type="number" name="default_parts_warranty_months" class="form-control" min="0" value="{{ org_settings.default_parts_warranty_months if org_settings.default_parts_warranty_months else 12 }}">
-                </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">Default Max Claim Value ($) <small style="color:var(--color-text-muted);">blank = unlimited</small></label>
-                    <input type="number" name="default_max_claim_value" class="form-control" step="0.01" min="0" value="{{ org_settings.default_max_claim_value if org_settings.default_max_claim_value else '' }}">
-                </div>
-                <div class="form-group"><label class="form-label">Callback Lookback (days)</label>
-                    <input type="number" name="callback_lookback_days" class="form-control" min="7" max="365" value="{{ org_settings.callback_lookback_days if org_settings.callback_lookback_days else 90 }}">
-                </div>
-            </div>
-            <div class="form-group" style="margin-bottom:var(--space-3);">
-                <label class="form-label">Callback Rate Alert Threshold (%)</label>
-                <input type="number" name="callback_rate_threshold" class="form-control" style="width:120px;" step="0.1" min="0" max="100" value="{{ org_settings.callback_rate_threshold if org_settings.callback_rate_threshold else 5.0 }}">
-            </div>
+        <form method="POST" action="{{ url_for('settings_bp.save_approval_settings') }}">
             <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-3);">
-                <input type="checkbox" name="auto_create_warranty_on_completion" {{ 'checked' if org_settings.auto_create_warranty_on_completion }}>
-                <div><span style="font-weight:500;">Auto-create warranty on job completion</span><div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">If off, a prompt appears instead</div></div>
+                <input type="checkbox" id="invoice_approval_enabled" name="invoice_approval_enabled" value="1"
+                       style="width:1rem;height:1rem;accent-color:var(--color-accent);"
+                       {% if org_settings and org_settings.invoice_approval_enabled %}checked{% endif %}>
+                <span style="font-weight:500;">Require approval for commercial invoices</span>
             </label>
-            <div class="form-group" style="margin-bottom:var(--space-3);">
-                <label class="form-label">Default Warranty Terms</label>
-                <textarea name="default_warranty_terms" class="form-control" rows="3">{{ org_settings.default_warranty_terms or '' }}</textarea>
+
+            <div id="approval-options" style="{% if not (org_settings and org_settings.invoice_approval_enabled) %}display:none;{% endif %}">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
+                    <div>
+                        <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Approval Threshold ($)</label>
+                        <input type="number" class="form-control" step="0.01" min="0"
+                               name="invoice_approval_threshold"
+                               value="{{ org_settings.invoice_approval_threshold if org_settings and org_settings.invoice_approval_threshold else '' }}"
+                               placeholder="Leave blank = all invoices">
+                        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Leave blank to require approval on all commercial invoices.</div>
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Roles That Can Approve</label>
+                        <input type="text" class="form-control" name="invoice_approval_roles"
+                               value="{{ org_settings.invoice_approval_roles if org_settings else 'owner,admin' }}">
+                        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Comma-separated (e.g. owner,admin)</div>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);">Save Warranty Settings</button>
+
+            <div style="display:flex;gap:var(--space-2);align-items:center;">
+                <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-save"></i> Save</button>
+                <a href="{{ url_for('invoices_bp.approval_queue') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-clipboard-check"></i> View Queue</a>
+            </div>
         </form>
     </div>
 </div>
 
-<!-- Communication Log Settings -->
-<div class="card" style="margin-top:var(--space-4);">
-    <div class="card-header"><h3 class="card-title"><i class="bi bi-chat-dots" style="color:var(--color-info);"></i> Communication Log</h3></div>
+<!-- ══════ SLA Templates ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-shield-check" style="color:var(--color-accent);"></i>
+        <span>SLA Templates</span>
+    </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('save_comm_settings') }}">
+        <p style="color:var(--color-text-secondary);font-size:var(--font-size-sm);margin-bottom:var(--space-3);">Manage service level agreement templates for contracts.</p>
+        <a href="{{ url_for('sla.sla_list') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-arrow-right"></i> Manage SLA Templates</a>
+    </div>
+</div>
+
+<!-- ══════ Warranty Settings ══════ -->
+{% if org_settings is defined %}
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-shield-check" style="color:var(--color-success);"></i>
+        <span>Warranty Settings</span>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('settings_bp.save_warranty_settings') }}">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">Inactive Client Alert (days)</label>
-                    <input type="number" name="inactive_client_alert_days" class="form-control" min="1" max="365" value="{{ org_settings.inactive_client_alert_days if org_settings.inactive_client_alert_days else 7 }}">
-                    <small style="color:var(--color-text-muted);">Alert when active clients haven't been contacted</small>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Default Labor Warranty (months)</label>
+                    <input type="number" name="default_labor_warranty_months" class="form-control" min="0" value="{{ org_settings.default_labor_warranty_months if org_settings.default_labor_warranty_months else 12 }}">
                 </div>
-                <div class="form-group"><label class="form-label">Default Follow-up Days</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Default Parts Warranty (months)</label>
+                    <input type="number" name="default_parts_warranty_months" class="form-control" min="0" value="{{ org_settings.default_parts_warranty_months if org_settings.default_parts_warranty_months else 12 }}">
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Default Max Claim Value ($) <span style="color:var(--color-text-muted);font-weight:400;">blank = unlimited</span></label>
+                    <input type="number" name="default_max_claim_value" class="form-control" step="0.01" min="0" value="{{ org_settings.default_max_claim_value if org_settings.default_max_claim_value else '' }}">
+                </div>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Callback Lookback (days)</label>
+                    <input type="number" name="callback_lookback_days" class="form-control" min="7" max="365" value="{{ org_settings.callback_lookback_days if org_settings.callback_lookback_days else 90 }}">
+                </div>
+            </div>
+            <div style="margin-bottom:var(--space-3);">
+                <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Callback Rate Alert Threshold (%)</label>
+                <input type="number" name="callback_rate_threshold" class="form-control" style="width:140px;" step="0.1" min="0" max="100" value="{{ org_settings.callback_rate_threshold if org_settings.callback_rate_threshold else 5.0 }}">
+            </div>
+            <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-3);">
+                <input type="checkbox" name="auto_create_warranty_on_completion" {{ 'checked' if org_settings.auto_create_warranty_on_completion }} style="accent-color:var(--color-accent);">
+                <div>
+                    <span style="font-weight:500;font-size:var(--font-size-sm);">Auto-create warranty on job completion</span>
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">If off, a prompt appears instead</div>
+                </div>
+            </label>
+            <div style="margin-bottom:var(--space-3);">
+                <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Default Warranty Terms</label>
+                <textarea name="default_warranty_terms" class="form-control" rows="3">{{ org_settings.default_warranty_terms or '' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-save"></i> Save Warranty Settings</button>
+        </form>
+    </div>
+</div>
+
+<!-- ══════ Communication Log ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-chat-dots" style="color:var(--color-info);"></i>
+        <span>Communication Log</span>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('settings_bp.save_comm_settings') }}">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Inactive Client Alert (days)</label>
+                    <input type="number" name="inactive_client_alert_days" class="form-control" min="1" max="365" value="{{ org_settings.inactive_client_alert_days if org_settings.inactive_client_alert_days else 7 }}">
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Alert when active clients haven't been contacted</div>
+                </div>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Default Follow-up Days</label>
                     <input type="number" name="default_follow_up_days" class="form-control" min="1" max="90" value="{{ org_settings.default_follow_up_days if org_settings.default_follow_up_days else 3 }}">
-                    <small style="color:var(--color-text-muted);">Auto-set follow-up date when toggled on</small>
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Auto-set follow-up date when toggled on</div>
                 </div>
             </div>
             <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-3);">
-                <input type="checkbox" name="require_comm_log_on_status_change" {{ 'checked' if org_settings.require_comm_log_on_status_change }}>
-                <div><span style="font-weight:500;">Require communication note on job status change</span></div>
+                <input type="checkbox" name="require_comm_log_on_status_change" {{ 'checked' if org_settings.require_comm_log_on_status_change }} style="accent-color:var(--color-accent);">
+                <span style="font-weight:500;font-size:var(--font-size-sm);">Require communication note on job status change</span>
             </label>
             <div style="display:flex;gap:var(--space-2);align-items:center;">
-                <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);">Save Communication Settings</button>
+                <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-save"></i> Save</button>
                 <a href="{{ url_for('comm_templates.template_list') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">Manage Templates &rarr;</a>
             </div>
         </form>
     </div>
 </div>
-<!-- Expense Settings -->
-<div class="card" style="margin-top:var(--space-4);">
-    <div class="card-header"><h3 class="card-title"><i class="bi bi-receipt" style="color:var(--color-accent);"></i> Expense Settings</h3></div>
+
+<!-- ══════ Expense Settings ══════ -->
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-receipt" style="color:var(--color-accent);"></i>
+        <span>Expense Settings</span>
+    </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('save_expense_settings') }}">
+        <form method="POST" action="{{ url_for('settings_bp.save_expense_settings') }}">
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">Approval Threshold ($)</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Approval Threshold ($)</label>
                     <input type="number" name="expense_approval_threshold" class="form-control" step="0.01" min="0" value="{{ org_settings.expense_approval_threshold if org_settings.expense_approval_threshold else '100.00' }}">
-                    <small style="color:var(--color-text-muted);">Expenses above this need approval. 0 = all require approval.</small>
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Above this needs approval. 0 = all require approval.</div>
                 </div>
-                <div class="form-group"><label class="form-label">Receipt Required ($)</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Receipt Required ($)</label>
                     <input type="number" name="expense_receipt_required_threshold" class="form-control" step="0.01" min="0" value="{{ org_settings.expense_receipt_required_threshold if org_settings.expense_receipt_required_threshold else '25.00' }}">
                 </div>
-                <div class="form-group"><label class="form-label">Mileage Rate ($/mile)</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Mileage Rate ($/mile)</label>
                     <input type="number" name="mileage_rate" class="form-control" step="0.0001" min="0" value="{{ org_settings.mileage_rate if org_settings.mileage_rate else '0.6700' }}">
-                    <small style="color:var(--color-text-muted);">IRS 2024: $0.67/mile</small>
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">IRS 2024: $0.67/mile</div>
                 </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">Default Expense Markup %</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Default Expense Markup %</label>
                     <input type="number" name="default_expense_markup" class="form-control" step="0.5" min="0" max="200" value="{{ org_settings.default_expense_markup if org_settings.default_expense_markup else '15.00' }}">
                 </div>
-                <div class="form-group"><label class="form-label">Approval Roles</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Approval Roles</label>
                     <input type="text" name="expense_approval_roles" class="form-control" value="{{ org_settings.expense_approval_roles if org_settings.expense_approval_roles else 'owner,admin' }}">
-                    <small style="color:var(--color-text-muted);">Comma-separated roles that can approve</small>
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Comma-separated roles that can approve</div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);">Save Expense Settings</button>
+            <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-save"></i> Save Expense Settings</button>
         </form>
     </div>
 </div>
 {% endif %}
 
-<!-- Notification Settings -->
+<!-- ══════ Notification Settings ══════ -->
 {% if user.role in ('admin', 'owner') %}
-<div class="card" style="margin-top:var(--space-4);">
-    <div class="card-header"><h3 class="card-title"><i class="bi bi-bell" style="color:var(--color-accent);"></i> Notification Settings</h3></div>
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-bell" style="color:var(--color-accent);"></i>
+        <span>Notification Settings</span>
+    </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('save_notification_settings') }}" autocomplete="off">
-            <!-- Global Controls -->
+        <form method="POST" action="{{ url_for('settings_bp.save_notification_settings') }}" autocomplete="off">
+            <!-- Global toggles -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4);">
-                <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;">
+                <label style="display:flex;align-items:flex-start;gap:var(--space-2);cursor:pointer;">
                     <input type="hidden" name="notifications_enabled" value="0">
                     <input type="checkbox" name="notifications_enabled" value="1"
                         {% if org_settings.notifications_enabled %}checked{% endif %}
-                        style="width:18px;height:18px;accent-color:var(--color-accent);">
-                    <span>
-                        <strong>Enable All Notifications</strong>
-                        <small style="display:block;color:var(--color-text-muted);">Master switch for the entire notification system</small>
-                    </span>
+                        style="width:18px;height:18px;accent-color:var(--color-accent);margin-top:2px;">
+                    <div>
+                        <span style="font-weight:600;font-size:var(--font-size-sm);">Enable All Notifications</span>
+                        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Master switch for the entire notification system</div>
+                    </div>
                 </label>
-                <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;">
+                <label style="display:flex;align-items:flex-start;gap:var(--space-2);cursor:pointer;">
                     <input type="hidden" name="client_notifications_enabled" value="0">
                     <input type="checkbox" name="client_notifications_enabled" value="1"
                         {% if org_settings.client_notifications_enabled %}checked{% endif %}
-                        style="width:18px;height:18px;accent-color:var(--color-accent);">
-                    <span>
-                        <strong>Client-Facing Notifications</strong>
-                        <small style="display:block;color:var(--color-text-muted);">Automated emails/SMS to clients</small>
-                    </span>
+                        style="width:18px;height:18px;accent-color:var(--color-accent);margin-top:2px;">
+                    <div>
+                        <span style="font-weight:600;font-size:var(--font-size-sm);">Client-Facing Notifications</span>
+                        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Automated emails/SMS to clients</div>
+                    </div>
                 </label>
             </div>
-            <!-- Email Settings -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">From Name</label>
+
+            <!-- Email -->
+            <div style="font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-2);">Email</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4);">
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">From Name</label>
                     <input type="text" name="email_from_name" class="form-control" value="{{ org_settings.email_from_name or '' }}" placeholder="FieldServicePro">
                 </div>
-                <div class="form-group"><label class="form-label">From Email</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">From Email</label>
                     <input type="email" name="email_from_address" class="form-control" value="{{ org_settings.email_from_address or '' }}" placeholder="notifications@yourcompany.com">
                 </div>
-                <div class="form-group"><label class="form-label">Reply-To</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Reply-To</label>
                     <input type="email" name="email_reply_to" class="form-control" value="{{ org_settings.email_reply_to or '' }}" placeholder="support@yourcompany.com">
                 </div>
             </div>
+
             <!-- Timing -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
-                <div class="form-group"><label class="form-label">Bell Poll Interval (sec)</label>
+            <div style="font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-2);">Timing</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4);">
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Bell Poll Interval (sec)</label>
                     <input type="number" name="notification_polling_interval" class="form-control" min="10" max="300" value="{{ org_settings.notification_polling_interval or 30 }}">
                 </div>
-                <div class="form-group"><label class="form-label">Appointment Reminder (hours before)</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Appointment Reminder (hrs before)</label>
                     <input type="number" name="appointment_reminder_hours" class="form-control" min="1" max="72" value="{{ org_settings.appointment_reminder_hours or 24 }}">
                 </div>
-                <div class="form-group"><label class="form-label">Invoice Reminder Days</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Invoice Reminder Days</label>
                     <input type="text" name="invoice_reminder_days" class="form-control" value="{{ org_settings.invoice_reminder_days or '[7, 14, 30]' }}" placeholder="[7, 14, 30]">
-                    <small style="color:var(--color-text-muted);">JSON array of days after due date</small>
+                    <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">JSON array of days after due date</div>
                 </div>
             </div>
-            <!-- SMS Settings -->
-            <div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);align-items:end;">
-                <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;padding-bottom:var(--space-1);">
+
+            <!-- SMS -->
+            <div style="font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-2);">SMS</div>
+            <div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4);align-items:end;">
+                <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;padding-bottom:var(--space-2);">
                     <input type="hidden" name="sms_enabled" value="0">
                     <input type="checkbox" name="sms_enabled" value="1"
                         {% if org_settings.sms_enabled %}checked{% endif %}
                         style="width:18px;height:18px;accent-color:var(--color-accent);">
-                    <strong style="font-size:var(--font-size-sm);">Enable SMS</strong>
+                    <span style="font-weight:600;font-size:var(--font-size-sm);">Enable SMS</span>
                 </label>
-                <div class="form-group"><label class="form-label">SMS Provider</label>
-                    <select name="sms_provider" class="form-select">
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">SMS Provider</label>
+                    <select name="sms_provider" class="form-control">
                         <option value="">Not configured</option>
                         <option value="twilio" {% if org_settings.sms_provider == 'twilio' %}selected{% endif %}>Twilio</option>
                         <option value="vonage" {% if org_settings.sms_provider == 'vonage' %}selected{% endif %}>Vonage</option>
                     </select>
                 </div>
-                <div class="form-group"><label class="form-label">API Key / SID</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">API Key / SID</label>
                     <input type="password" name="sms_api_key" class="form-control" value="{{ org_settings.sms_api_key or '' }}" placeholder="Provider API key">
                 </div>
-                <div class="form-group"><label class="form-label">From Number</label>
+                <div>
+                    <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">From Number</label>
                     <input type="text" name="sms_from_number" class="form-control" value="{{ org_settings.sms_from_number or '' }}" placeholder="+15551234567">
                 </div>
             </div>
-            <!-- Quick Links -->
-            <div style="display:flex;gap:var(--space-2);margin-bottom:var(--space-3);padding:var(--space-2) 0;border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border);">
+
+            <!-- Quick links -->
+            <div style="display:flex;gap:var(--space-2);padding:var(--space-3) 0;border-top:1px solid var(--color-border);margin-bottom:var(--space-3);">
                 <a href="{{ url_for('notifications.preferences') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-sliders"></i> My Preferences</a>
                 <a href="{{ url_for('notifications.client_templates') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-envelope-check"></i> Client Templates</a>
                 <a href="{{ url_for('notifications.notification_log') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-journal-text"></i> Notification Log</a>
             </div>
-            <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);">Save Notification Settings</button>
+
+            <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-save"></i> Save Notification Settings</button>
         </form>
     </div>
 </div>
@@ -362,7 +426,7 @@
 
 <script>
 document.getElementById('invoice_approval_enabled').addEventListener('change', function () {
-  document.getElementById('approval-options').style.display = this.checked ? '' : 'none';
+    document.getElementById('approval-options').style.display = this.checked ? '' : 'none';
 });
 </script>
 {% endblock %}

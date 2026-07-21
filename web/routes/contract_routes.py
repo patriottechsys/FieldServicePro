@@ -1,7 +1,7 @@
 """Contract CRUD routes — List, Create, Edit, Detail, Status, Attachments."""
 
 import os
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from flask import (Blueprint, render_template, request, redirect,
                    url_for, flash, abort, current_app, jsonify)
 from flask_login import login_required, current_user
@@ -456,7 +456,7 @@ def contract_upload(contract_id):
                                   str(contract_id))
         os.makedirs(upload_dir, exist_ok=True)
         safe_name = secure_filename(file.filename)
-        stored_name = f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{safe_name}"
+        stored_name = f"{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}_{safe_name}"
         file.save(os.path.join(upload_dir, stored_name))
 
         att = ContractAttachment(
@@ -516,6 +516,9 @@ def api_client_properties(client_id):
     """Return JSON list of properties for a client (dynamic form population)."""
     db = get_session()
     try:
+        client = db.query(Client).filter_by(id=client_id, organization_id=current_user.organization_id).first()
+        if not client:
+            return jsonify([]), 404
         props = db.query(Property).filter_by(client_id=client_id).all()
         return jsonify([{
             'id': p.id,

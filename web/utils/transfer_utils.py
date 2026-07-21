@@ -1,5 +1,5 @@
 """Utility functions for stock transfer workflow."""
-from datetime import datetime
+from datetime import timezone, datetime
 from models.stock_transfer import StockTransfer, StockTransferItem
 from models.inventory import InventoryStock, InventoryTransaction
 from models.part import Part
@@ -7,7 +7,7 @@ from models.part import Part
 
 def generate_transfer_number(db):
     """Generate next sequential transfer number like TRF-2026-0001."""
-    year = datetime.utcnow().year
+    year = datetime.now(timezone.utc).year
     prefix = f"TRF-{year}-"
     last = db.query(StockTransfer).filter(
         StockTransfer.transfer_number.like(f"{prefix}%")
@@ -88,7 +88,7 @@ def receive_transfer(db, transfer, received_quantities, performed_by):
             db.flush()
 
         stock.quantity_on_hand += qty_received
-        stock.last_received_at = datetime.utcnow()
+        stock.last_received_at = datetime.now(timezone.utc)
 
         # Audit transaction
         db.add(InventoryTransaction(
@@ -105,7 +105,7 @@ def receive_transfer(db, transfer, received_quantities, performed_by):
         ))
 
     transfer.status = 'completed'
-    transfer.completed_at = datetime.utcnow()
+    transfer.completed_at = datetime.now(timezone.utc)
     transfer.completed_by = performed_by
     db.commit()
     return True

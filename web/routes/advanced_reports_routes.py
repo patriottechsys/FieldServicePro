@@ -1,5 +1,5 @@
 """Advanced Reports Routes — Tech Leaderboard, Sales Pipeline, Achievements."""
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from flask import (Blueprint, render_template, request, jsonify,
                    redirect, url_for, flash)
 from flask_login import login_required, current_user
@@ -409,7 +409,7 @@ def update_quote_stage():
         if not q:
             return jsonify({'error': 'Not found'}), 404
         q.status = new_status
-        q.updated_at = datetime.utcnow()
+        q.updated_at = datetime.now(timezone.utc)
         db.commit()
         return jsonify({'success': True, 'quote_id': quote_id, 'status': new_status})
     finally:

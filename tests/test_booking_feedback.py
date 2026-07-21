@@ -72,8 +72,8 @@ def test_avg_category_rating():
 def test_response_time_hours():
     """Response time computed."""
     from models.feedback_survey import FeedbackSurvey
-    from datetime import datetime, timedelta
-    now = datetime.utcnow()
+    from datetime import datetime, timedelta, timezone
+    now = datetime.now(timezone.utc)
     s = FeedbackSurvey(sent_at=now - timedelta(hours=4), completed_at=now)
     assert s.response_time_hours == 4.0
 
@@ -81,8 +81,8 @@ def test_response_time_hours():
 def test_is_expired():
     """Expiry check."""
     from models.feedback_survey import FeedbackSurvey
-    from datetime import datetime, timedelta
-    now = datetime.utcnow()
+    from datetime import datetime, timedelta, timezone
+    now = datetime.now(timezone.utc)
     s = FeedbackSurvey(expires_at=now - timedelta(days=1))
     assert s.is_expired is True
     s.expires_at = now + timedelta(days=1)

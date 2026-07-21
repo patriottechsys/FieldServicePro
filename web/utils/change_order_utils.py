@@ -2,7 +2,7 @@
 Change order creation, update, line item management, and approval application.
 All functions take an open db session. Caller must commit.
 """
-from datetime import datetime, date
+from datetime import timezone, datetime, date
 from models.change_order import (
     ChangeOrder, ChangeOrderLineItem,
     ChangeOrderStatus, ChangeOrderReason,
@@ -79,7 +79,7 @@ def update_change_order(db, co, form_data):
     co.requires_client_approval = 'requires_client_approval' in form_data
     co.creates_new_phase = 'creates_new_phase' in form_data
     co.new_phase_title = form_data.get('new_phase_title', co.new_phase_title)
-    co.updated_at = datetime.utcnow()
+    co.updated_at = datetime.now(timezone.utc)
 
     phase_id = form_data.get('phase_id')
     if phase_id is not None:

@@ -5,7 +5,7 @@
 {% block content %}
 <!-- Back link -->
 <div style="margin-bottom:var(--space-2);">
-    <a href="{{ url_for('clients_page') }}" style="color:var(--color-text-muted);text-decoration:none;font-size:var(--font-size-sm);">
+    <a href="{{ url_for('clients_bp.clients_page') }}" style="color:var(--color-text-muted);text-decoration:none;font-size:var(--font-size-sm);">
         <i class="bi bi-arrow-left"></i> Back to Clients
     </a>
 </div>
@@ -31,7 +31,7 @@
             {% endif %}
         </div>
     </div>
-    <a href="#" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-pencil"></i> Edit Client</a>
+    <a href="{{ url_for('clients_bp.client_edit_page', client_id=client.id) }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-pencil"></i> Edit Client</a>
 </div>
 
 <!-- ── Division Filter Pills ── -->
@@ -384,7 +384,7 @@
                             </div>
                         </div></div>
                     </div>
-                    <div class="card"><div class="card-header" style="font-size:var(--font-size-sm);font-weight:600;display:flex;justify-content:space-between;">AR Aging <a href="{{ url_for('aging_report') }}?client_id={{ client.id }}" class="btn btn-sm btn-ghost"><i class="bi bi-bar-chart"></i> Full Report</a></div>
+                    <div class="card"><div class="card-header" style="font-size:var(--font-size-sm);font-weight:600;display:flex;justify-content:space-between;">AR Aging <a href="{{ url_for('invoices_bp.aging_report') }}?client_id={{ client.id }}" class="btn btn-sm btn-ghost"><i class="bi bi-bar-chart"></i> Full Report</a></div>
                     <div class="card-body">
                         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-2);text-align:center;">
                             {% for label, val, color in [('Current',aging.current,'success'),('1-30d',aging.days_1_30,'text-secondary'),('31-60d',aging.days_31_60,'warning'),('61-90d',aging.days_61_90,'warning'),('90+',aging.days_90_plus,'danger'),('Total',aging.total,'accent')] %}
@@ -432,7 +432,7 @@
                 <div style="padding:var(--space-3);">
                     <div class="card"><div class="card-body">
                         <h3 style="font-size:var(--font-size-base);font-weight:600;margin-bottom:var(--space-3);">Generate Account Statement</h3>
-                        <form id="stmt-form" action="{{ url_for('client_statement', client_id=client.id) }}" method="GET" target="_blank" style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:end;">
+                        <form id="stmt-form" action="{{ url_for('clients_bp.client_statement', client_id=client.id) }}" method="GET" target="_blank" style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:end;">
                             <div class="form-group" style="margin:0;"><label class="form-label">From</label><input type="date" name="start_date" class="form-control" value="{{ default_stmt_start.isoformat() }}"></div>
                             <div class="form-group" style="margin:0;"><label class="form-label">To</label><input type="date" name="end_date" class="form-control" value="{{ default_stmt_end.isoformat() }}"></div>
                             <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-eye"></i> View</button>

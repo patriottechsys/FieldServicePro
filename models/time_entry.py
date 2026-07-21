@@ -1,5 +1,5 @@
 """Time Tracking models: TimeEntry and ActiveClock."""
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from sqlalchemy import (
     Column, Integer, String, Text, Date, Time, DateTime,
     Boolean, Float, ForeignKey, Index
@@ -124,7 +124,7 @@ class ActiveClock(Base):
     phase      = relationship('JobPhase')
 
     def elapsed_seconds(self):
-        return (datetime.utcnow() - self.clock_in_time).total_seconds()
+        return (datetime.now(timezone.utc) - self.clock_in_time).total_seconds()
 
     def elapsed_display(self):
         secs = int(self.elapsed_seconds())

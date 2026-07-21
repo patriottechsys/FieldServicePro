@@ -2,117 +2,93 @@
 {% block title %}Equipment - FieldServicePro{% endblock %}
 
 {% block content %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+<!-- Header + KPI row -->
+<div style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:start;margin-bottom:var(--space-4);">
     <div>
-        <h1 style="margin:0;">Equipment & Assets</h1>
-        <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">{{ items|length }} item{{ 's' if items|length != 1 else '' }}</p>
+        <h1 style="margin:0;font-size:var(--font-size-xl);">Equipment &amp; Assets</h1>
+        <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">{{ items|length }} item{{ 's' if items|length != 1 else '' }} across {{ total }} total</p>
     </div>
-    <div>
-        <button class="btn btn-accent" onclick="document.getElementById('addEquipModal').style.display='flex'">
-            <i class="bi bi-plus-lg"></i> Add Equipment
-        </button>
-    </div>
+    <button class="btn btn-accent" onclick="document.getElementById('addEquipModal').style.display='flex'">
+        <i class="bi bi-plus-lg"></i> Add Equipment
+    </button>
 </div>
 
-<!-- Add Equipment Modal -->
-<div id="addEquipModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1060;align-items:center;justify-content:center;">
-  <div class="card" style="width:100%;max-width:440px;padding:var(--space-4);">
-    <h3 style="margin:0 0 var(--space-3) 0;">Add Equipment</h3>
-    <form method="POST" action="{{ url_for('equipment.add_equipment') }}">
-      <div class="form-group" style="margin-bottom:var(--space-2);">
-        <label for="eq_name">Name *</label>
-        <input type="text" name="name" id="eq_name" class="form-control" required placeholder="e.g. Excavator, Drill Press">
-      </div>
-      <div class="form-group" style="margin-bottom:var(--space-2);">
-        <label for="eq_type">Type</label>
-        <select name="equipment_type" id="eq_type" class="form-control">
-          {% for val, label in type_choices %}
-          <option value="{{ val }}">{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:var(--space-2);">
-        <label for="eq_make">Make</label>
-        <input type="text" name="make" id="eq_make" class="form-control" placeholder="e.g. CAT, DeWalt">
-      </div>
-      <div class="form-group" style="margin-bottom:var(--space-2);">
-        <label for="eq_model">Model</label>
-        <input type="text" name="model" id="eq_model" class="form-control">
-      </div>
-      <div class="form-group" style="margin-bottom:var(--space-3);">
-        <label for="eq_serial">Serial Number</label>
-        <input type="text" name="serial_number" id="eq_serial" class="form-control">
-      </div>
-      <div style="display:flex;gap:var(--space-2);justify-content:flex-end;">
-        <button type="button" class="btn btn-ghost" onclick="document.getElementById('addEquipModal').style.display='none'">Cancel</button>
-        <button type="submit" class="btn btn-accent">Create</button>
-      </div>
-    </form>
-  </div>
-
-<!-- KPI Stats -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--space-3);margin-bottom:var(--space-4);">
-    <div class="card" style="padding:var(--space-3);border-left:3px solid var(--color-accent);">
-        <div style="font-size:var(--font-size-2xl);font-weight:700;">{{ total }}</div>
-        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Total Assets</div>
-    </div>
-    <div class="card" style="padding:var(--space-3);border-left:3px solid var(--color-success);">
-        <div style="font-size:var(--font-size-2xl);font-weight:700;">{{ available }}</div>
-        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Available</div>
-    </div>
-    <div class="card" style="padding:var(--space-3);border-left:3px solid var(--color-info);">
-        <div style="font-size:var(--font-size-2xl);font-weight:700;">{{ assigned }}</div>
-        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Assigned</div>
-    </div>
-    <div class="card" style="padding:var(--space-3);border-left:3px solid var(--color-warning);">
-        <div style="font-size:var(--font-size-2xl);font-weight:700;">{{ in_maintenance }}</div>
-        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">In Maintenance</div>
-    </div>
-    <div class="card" style="padding:var(--space-3);border-left:3px solid var(--color-danger);">
-        <div style="font-size:var(--font-size-2xl);font-weight:700;">{{ out_of_service }}</div>
-        <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Out of Service</div>
-    </div>
+<!-- KPI Stats — compact inline -->
+<div style="display:flex;gap:var(--space-2);margin-bottom:var(--space-4);flex-wrap:wrap;">
+    <a href="{{ url_for('equipment.equipment_list') }}" style="text-decoration:none;">
+        <div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);min-width:100px;{% if not filter_status %}border-color:var(--color-accent);{% endif %}">
+            <span style="font-size:var(--font-size-lg);font-weight:700;color:var(--color-text);">{{ total }}</span>
+            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Total</span>
+        </div>
+    </a>
+    <a href="{{ url_for('equipment.equipment_list', status='available') }}" style="text-decoration:none;">
+        <div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);min-width:100px;{% if filter_status == 'available' %}border-color:var(--color-success);background:rgba(16,185,129,0.05);{% endif %}">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--color-success);flex-shrink:0;"></span>
+            <span style="font-size:var(--font-size-lg);font-weight:700;color:var(--color-text);">{{ available }}</span>
+            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Available</span>
+        </div>
+    </a>
+    <a href="{{ url_for('equipment.equipment_list', status='assigned') }}" style="text-decoration:none;">
+        <div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);min-width:100px;{% if filter_status == 'assigned' %}border-color:var(--color-info);background:rgba(13,148,136,0.05);{% endif %}">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--color-info);flex-shrink:0;"></span>
+            <span style="font-size:var(--font-size-lg);font-weight:700;color:var(--color-text);">{{ assigned }}</span>
+            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Assigned</span>
+        </div>
+    </a>
+    <a href="{{ url_for('equipment.equipment_list', status='in_maintenance') }}" style="text-decoration:none;">
+        <div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);min-width:100px;{% if filter_status == 'in_maintenance' %}border-color:var(--color-warning);background:rgba(245,158,11,0.05);{% endif %}">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--color-warning);flex-shrink:0;"></span>
+            <span style="font-size:var(--font-size-lg);font-weight:700;color:var(--color-text);">{{ in_maintenance }}</span>
+            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Maint.</span>
+        </div>
+    </a>
+    <a href="{{ url_for('equipment.equipment_list', status='out_of_service') }}" style="text-decoration:none;">
+        <div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);min-width:100px;{% if filter_status == 'out_of_service' %}border-color:var(--color-danger);background:rgba(239,68,68,0.05);{% endif %}">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--color-danger);flex-shrink:0;"></span>
+            <span style="font-size:var(--font-size-lg);font-weight:700;color:var(--color-text);">{{ out_of_service }}</span>
+            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">Out</span>
+        </div>
+    </a>
 </div>
 
-<!-- Filter Bar -->
-<div class="card" style="padding:var(--space-2) var(--space-3);margin-bottom:var(--space-3);">
-    <form method="GET" style="display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap;">
-        <select name="type" class="form-control" style="width:auto;min-width:130px;" onchange="this.form.submit()">
+<!-- Filter + Search bar -->
+<div style="display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap;margin-bottom:var(--space-3);">
+    <form method="GET" style="display:flex;gap:var(--space-2);align-items:center;flex:1;flex-wrap:wrap;">
+        <select name="type" class="form-control" style="width:auto;min-width:130px;font-size:var(--font-size-sm);" onchange="this.form.submit()">
             <option value="">All Types</option>
             {% for val, label in type_choices %}
             <option value="{{ val }}" {{ 'selected' if filter_type == val }}>{{ label }}</option>
             {% endfor %}
         </select>
-        <select name="status" class="form-control" style="width:auto;min-width:130px;" onchange="this.form.submit()">
+        <select name="status" class="form-control" style="width:auto;min-width:130px;font-size:var(--font-size-sm);" onchange="this.form.submit()">
             <option value="">All Statuses</option>
             {% for val, label in status_choices %}
             <option value="{{ val }}" {{ 'selected' if filter_status == val }}>{{ label }}</option>
             {% endfor %}
         </select>
-        <div style="position:relative;margin-left:auto;">
+        <div style="position:relative;flex:1;min-width:180px;max-width:300px;">
             <i class="bi bi-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);font-size:0.8rem;"></i>
-            <input type="text" name="search" class="form-control" placeholder="Search equipment..." value="{{ search or '' }}" style="padding-left:2rem;width:220px;">
+            <input type="text" name="search" class="form-control" placeholder="Search equipment..." value="{{ search or '' }}" style="padding-left:2rem;font-size:var(--font-size-sm);">
         </div>
         {% if filter_type or filter_status or search %}
-        <a href="{{ url_for('equipment.equipment_list') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">Clear</a>
+        <a href="{{ url_for('equipment.equipment_list') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);white-space:nowrap;">Clear filters</a>
         {% endif %}
     </form>
 </div>
 
 <!-- Equipment Table -->
-<div class="card">
+<div class="card" style="overflow:hidden;">
     <div style="overflow-x:auto;">
         {% if items %}
         <table id="equipTable" style="width:100%;border-collapse:collapse;">
             <thead>
                 <tr style="border-bottom:2px solid var(--color-border);">
-                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:180px;">Name</th>
-                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:90px;">Type</th>
-                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:90px;">Status</th>
-                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:120px;">Identifier</th>
-                    <th style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:80px;">Rate</th>
-                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:100px;">Last Maint.</th>
-                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;min-width:100px;">Next Due</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Name</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Type</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Status</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Identifier</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Rate</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Next Maint.</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,29 +99,32 @@
                         {% if eq.make_model %}<div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">{{ eq.make_model }}{% if eq.year %} ({{ eq.year }}){% endif %}</div>{% endif %}
                     </td>
                     <td style="padding:var(--space-2) var(--space-3);">
-                        <span style="display:inline-block;font-size:var(--font-size-xs);font-weight:600;padding:2px 10px;border-radius:999px;background:var(--color-surface-raised);color:var(--color-text-secondary);">{{ eq.type_display }}</span>
+                        <span style="font-size:var(--font-size-xs);color:var(--color-text-secondary);">{{ eq.type_display }}</span>
                     </td>
                     <td style="padding:var(--space-2) var(--space-3);">
                         <span style="display:inline-block;font-size:var(--font-size-xs);font-weight:600;padding:2px 10px;border-radius:999px;background:{% if eq.status == 'available' %}rgba(16,185,129,0.1){% elif eq.status == 'assigned' %}rgba(13,148,136,0.1){% elif eq.status == 'in_maintenance' %}rgba(245,158,11,0.1){% elif eq.status == 'out_of_service' %}rgba(239,68,68,0.1){% else %}var(--color-surface-raised){% endif %};color:var(--color-{{ eq.status_color }});">{{ eq.status_display }}</span>
                     </td>
-                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-secondary);font-family:monospace;">{{ eq.serial_number or eq.identifier or '' }}</td>
-                    <td style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-sm);">
-                        {% if eq.daily_rate %}${{ "{:,.0f}".format(eq.daily_rate) }}/day{% elif eq.hourly_rate %}${{ "{:,.0f}".format(eq.hourly_rate) }}/hr{% endif %}
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-secondary);font-family:monospace;">{{ eq.serial_number or eq.identifier or '—' }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-sm);color:var(--color-text-secondary);">
+                        {% if eq.daily_rate %}${{ "{:,.0f}".format(eq.daily_rate) }}/d{% elif eq.hourly_rate %}${{ "{:,.0f}".format(eq.hourly_rate) }}/h{% else %}—{% endif %}
                     </td>
-                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);">{{ eq.last_maintenance.strftime('%b %d, %Y') if eq.last_maintenance else '' }}</td>
-                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);{% if eq.maintenance_overdue %}color:var(--color-danger);font-weight:600;{% endif %}">
-                        {{ eq.next_maintenance.strftime('%b %d, %Y') if eq.next_maintenance else '' }}
-                        {% if eq.maintenance_overdue %}<i class="bi bi-exclamation-triangle" style="font-size:0.7rem;"></i>{% endif %}
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);{% if eq.maintenance_overdue %}color:var(--color-danger);font-weight:600;{% else %}color:var(--color-text-secondary);{% endif %}">
+                        {% if eq.next_maintenance %}{{ eq.next_maintenance.strftime('%b %d, %Y') }}{% if eq.maintenance_overdue %} <i class="bi bi-exclamation-triangle" style="font-size:0.7rem;"></i>{% endif %}{% else %}—{% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <div style="padding:var(--space-6);text-align:center;">
-            <i class="bi bi-tools" style="font-size:3rem;color:var(--color-text-muted);"></i>
-            <h3 style="margin:var(--space-2) 0 var(--space-1);">No equipment</h3>
-            <p style="color:var(--color-text-muted);">{% if search or filter_type or filter_status %}No equipment matches your filters.{% else %}No equipment or assets have been added yet.{% endif %}</p>
+        <div style="padding:var(--space-8);text-align:center;">
+            <i class="bi bi-tools" style="font-size:3rem;color:var(--color-text-muted);opacity:0.4;display:block;margin-bottom:var(--space-3);"></i>
+            <h3 style="margin:0 0 var(--space-1);font-size:var(--font-size-lg);">No equipment found</h3>
+            <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin-bottom:var(--space-3);">{% if search or filter_type or filter_status %}No results match your filters. Try adjusting your search.{% else %}Get started by adding your first piece of equipment.{% endif %}</p>
+            {% if not search and not filter_type and not filter_status %}
+            <button class="btn btn-accent" onclick="document.getElementById('addEquipModal').style.display='flex'">
+                <i class="bi bi-plus-lg"></i> Add Equipment
+            </button>
+            {% endif %}
         </div>
         {% endif %}
     </div>
@@ -154,4 +133,46 @@
 <style>
 #equipTable tbody tr:hover { background: var(--color-surface-raised); }
 </style>
+
+<!-- Add Equipment Modal -->
+<div id="addEquipModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1060;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="card" style="width:100%;max-width:440px;padding:var(--space-5);margin:var(--space-4);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+      <h3 style="margin:0;font-size:var(--font-size-lg);">Add Equipment</h3>
+      <button onclick="document.getElementById('addEquipModal').style.display='none'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--color-text-muted);line-height:1;" aria-label="Close">&times;</button>
+    </div>
+    <form method="POST" action="{{ url_for('equipment.add_equipment') }}">
+      <div style="margin-bottom:var(--space-3);">
+        <label for="eq_name" style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Name *</label>
+        <input type="text" name="name" id="eq_name" class="form-control" required placeholder="e.g. Excavator, Drill Press">
+      </div>
+      <div style="margin-bottom:var(--space-3);">
+        <label for="eq_type" style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Type</label>
+        <select name="equipment_type" id="eq_type" class="form-control">
+          {% for val, label in type_choices %}
+          <option value="{{ val }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
+        <div>
+          <label for="eq_make" style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Make</label>
+          <input type="text" name="make" id="eq_make" class="form-control" placeholder="e.g. CAT, DeWalt">
+        </div>
+        <div>
+          <label for="eq_model" style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Model</label>
+          <input type="text" name="model" id="eq_model" class="form-control">
+        </div>
+      </div>
+      <div style="margin-bottom:var(--space-4);">
+        <label for="eq_serial" style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Serial Number</label>
+        <input type="text" name="serial_number" id="eq_serial" class="form-control">
+      </div>
+      <div style="display:flex;gap:var(--space-2);justify-content:flex-end;">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('addEquipModal').style.display='none'">Cancel</button>
+        <button type="submit" class="btn btn-accent">Create</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -2,7 +2,7 @@
 Phase management utilities — create, update, reorder, delete, cost sync.
 All functions take an open db session. Caller must commit.
 """
-from datetime import datetime
+from datetime import timezone, datetime
 from sqlalchemy import func
 from models.job_phase import JobPhase
 from models.job import Job
@@ -66,7 +66,7 @@ def update_phase(db, phase, form_data):
     phase.notes = form_data.get('notes', phase.notes)
     phase.completion_notes = form_data.get('completion_notes', phase.completion_notes)
     phase.requires_inspection = 'requires_inspection' in form_data
-    phase.updated_at = datetime.utcnow()
+    phase.updated_at = datetime.now(timezone.utc)
     return phase
 
 

@@ -1,6 +1,6 @@
 """Contract, ContractLineItem, ContractActivityLog, ContractAttachment models."""
 
-from datetime import datetime, date
+from datetime import timezone, datetime, date
 import enum
 from sqlalchemy import (
     Column, Integer, String, Text, Boolean, Float, Date, DateTime,
@@ -150,7 +150,7 @@ class Contract(Base):
     @staticmethod
     def generate_contract_number(db_session):
         """Generate next sequential contract number: CTR-YYYY-XXXX"""
-        year = datetime.utcnow().year
+        year = datetime.now(timezone.utc).year
         prefix = f"CTR-{year}-"
         last = (db_session.query(Contract)
                 .filter(Contract.contract_number.like(f"{prefix}%"))

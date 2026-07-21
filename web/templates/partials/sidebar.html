@@ -81,7 +81,7 @@
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('jobs_page') }}"
+          <a href="{{ url_for('jobs_bp.jobs_page') }}"
              class="sidebar__link {% if active_page == 'jobs' %}is-active{% endif %}">
             <i class="bi bi-briefcase sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Jobs</span>
@@ -211,7 +211,7 @@
       <span class="sidebar__group-label">Clients</span>
       <ul class="sidebar__list" role="list">
         <li class="sidebar__item">
-          <a href="{{ url_for('clients_page') }}"
+          <a href="{{ url_for('clients_bp.clients_page') }}"
              class="sidebar__link {% if active_page == 'clients' %}is-active{% endif %}">
             <i class="bi bi-people sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Clients</span>
@@ -225,14 +225,14 @@
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('quotes_page') }}"
+          <a href="{{ url_for('quotes_bp.quotes_page') }}"
              class="sidebar__link {% if active_page == 'quotes' %}is-active{% endif %}">
             <i class="bi bi-file-earmark-text sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Quotes</span>
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('invoices_page') }}"
+          <a href="{{ url_for('invoices_bp.invoices_page') }}"
              class="sidebar__link {% if active_page == 'invoices' %}is-active{% endif %}">
             <i class="bi bi-receipt sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Invoices</span>
@@ -246,21 +246,21 @@
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('aging_report') }}"
+          <a href="{{ url_for('invoices_bp.aging_report') }}"
              class="sidebar__link {% if active_page == 'aging' %}is-active{% endif %}">
             <i class="bi bi-bar-chart-line sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">AR Aging</span>
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('bulk_statements') }}"
+          <a href="{{ url_for('invoices_bp.bulk_statements') }}"
              class="sidebar__link {% if active_page == 'statements' %}is-active{% endif %}">
             <i class="bi bi-envelope-paper sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Statements</span>
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('approval_queue') }}"
+          <a href="{{ url_for('invoices_bp.approval_queue') }}"
              class="sidebar__link {% if active_page == 'approvals' %}is-active{% endif %}">
             <i class="bi bi-clipboard-check sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Approvals</span>
@@ -392,7 +392,7 @@
           </a>
         </li>
         <li class="sidebar__item">
-          <a href="{{ url_for('settings_page') }}"
+          <a href="{{ url_for('settings_bp.settings_page') }}"
              class="sidebar__link {% if active_page == 'settings' %}is-active{% endif %}">
             <i class="bi bi-gear sidebar__link-icon" aria-hidden="true"></i>
             <span class="sidebar__link-text">Settings</span>

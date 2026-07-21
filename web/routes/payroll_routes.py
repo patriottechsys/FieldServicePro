@@ -1,5 +1,5 @@
 """Payroll dashboard, period detail, calculation, finalization, and export."""
-from datetime import date, datetime
+from datetime import timezone, date, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, Response
 from flask_login import login_required, current_user
 
@@ -264,7 +264,7 @@ def payroll_export(period_id):
 
         if period.status == 'finalized':
             period.status = 'exported'
-            period.exported_at = datetime.utcnow()
+            period.exported_at = datetime.now(timezone.utc)
             db.commit()
 
         return Response(csv_data, mimetype='text/csv',

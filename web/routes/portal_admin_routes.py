@@ -37,7 +37,7 @@ def list_portal_users(client_id):
         client = db.query(Client).filter_by(id=client_id).first()
         if not client:
             flash('Client not found.', 'error')
-            return redirect(url_for('clients_page'))
+            return redirect(url_for('clients_bp.clients_page'))
 
         portal_users = db.query(PortalUser).filter_by(client_id=client_id).order_by(
             PortalUser.created_at
@@ -59,7 +59,7 @@ def create_portal_user(client_id):
         client = db.query(Client).filter_by(id=client_id).first()
         if not client:
             flash('Client not found.', 'error')
-            return redirect(url_for('clients_page'))
+            return redirect(url_for('clients_bp.clients_page'))
 
         properties = db.query(Property).filter_by(client_id=client_id, is_active=True).all()
 
@@ -140,7 +140,7 @@ def toggle_portal_user(user_id):
         portal_user = db.query(PortalUser).filter_by(id=user_id).first()
         if not portal_user:
             flash('Portal user not found.', 'error')
-            return redirect(url_for('clients_page'))
+            return redirect(url_for('clients_bp.clients_page'))
 
         portal_user.is_active = not portal_user.is_active
         db.commit()
@@ -160,7 +160,7 @@ def reset_portal_user_password(user_id):
         portal_user = db.query(PortalUser).filter_by(id=user_id).first()
         if not portal_user:
             flash('Portal user not found.', 'error')
-            return redirect(url_for('clients_page'))
+            return redirect(url_for('clients_bp.clients_page'))
 
         token = portal_user.generate_reset_token()
         db.commit()

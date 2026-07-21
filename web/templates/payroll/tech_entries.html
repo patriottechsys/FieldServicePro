@@ -63,7 +63,7 @@
             <td style="padding:var(--space-2) var(--space-3);">{{ e.start_time.strftime('%I:%M %p') if e.start_time else '--' }}</td>
             <td style="padding:var(--space-2) var(--space-3);">{{ e.end_time.strftime('%I:%M %p') if e.end_time else '--' }}</td>
             <td style="padding:var(--space-2) var(--space-3);text-align:right;font-weight:700;">{{ "%.2f"|format(e.duration_hours|float) if e.duration_hours else '--' }}</td>
-            <td style="padding:var(--space-2) var(--space-3);">{% if e.job %}<a href="{{ url_for('job_detail', job_id=e.job_id) }}" style="font-size:var(--font-size-xs);color:var(--color-accent);text-decoration:none;">{{ e.job.job_number }}</a>{% else %}--{% endif %}</td>
+            <td style="padding:var(--space-2) var(--space-3);">{% if e.job %}<a href="{{ url_for('jobs_bp.job_detail', job_id=e.job_id) }}" style="font-size:var(--font-size-xs);color:var(--color-accent);text-decoration:none;">{{ e.job.job_number }}</a>{% else %}--{% endif %}</td>
             <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-xs);">{{ e.entry_type or 'regular' }}</td>
             <td style="padding:var(--space-2) var(--space-3);"><span style="font-size:var(--font-size-xs);padding:1px 6px;border-radius:var(--radius-sm);background:{% if e.status == 'approved' %}var(--color-success){% elif e.status in ('completed','exported') %}var(--color-accent){% else %}var(--color-warning){% endif %};color:#fff;">{{ e.status }}</span></td>
             <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-xs);color:var(--color-text-muted);">{{ (e.description or '')[:50] }}</td>

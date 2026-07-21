@@ -36,7 +36,7 @@
 {% if not print_mode %}
 <div class="no-print" style="background: var(--color-surface); border-bottom: 1px solid var(--color-border); padding: var(--space-3) var(--space-4); display: flex; justify-content: space-between; align-items: center;">
   <div style="display: flex; gap: var(--space-2); align-items: center;">
-    <a href="{{ url_for('client_detail', client_id=client.id) }}" class="btn btn-sm btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+    <a href="{{ url_for('clients_bp.client_detail', client_id=client.id) }}" class="btn btn-sm btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     <form style="display: flex; gap: var(--space-2); align-items: center;" method="GET">
       <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);">Period:</span>
       <input type="date" class="form-control" name="start_date" value="{{ start_date.isoformat() }}" style="width: auto; font-size: var(--font-size-sm);">

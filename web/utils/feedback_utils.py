@@ -1,7 +1,7 @@
 """Feedback utilities: survey delivery, stats, NPS, notifications."""
 import os
 import logging
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from sqlalchemy import func
 
 logger = logging.getLogger(__name__)
@@ -63,8 +63,8 @@ def auto_send_survey(db, job, settings=None):
         technician_id=tech_id,
         template_id=template.id if template else None,
         status='sent',
-        sent_at=datetime.utcnow(),
-        expires_at=datetime.utcnow() + timedelta(days=expiry_days),
+        sent_at=datetime.now(timezone.utc),
+        expires_at=datetime.now(timezone.utc) + timedelta(days=expiry_days),
     )
     db.add(survey)
     db.flush()
@@ -188,7 +188,7 @@ def get_feedback_stats(db):
     response_rate = round((total / total_sent) * 100, 1) if total_sent else 0
 
     # Negative last 30d
-    thirty_ago = datetime.utcnow() - timedelta(days=30)
+    thirty_ago = datetime.now(timezone.utc) - timedelta(days=30)
     negative_30d = db.query(FeedbackSurvey).filter(
         FeedbackSurvey.status == 'completed',
         FeedbackSurvey.overall_rating <= 2,

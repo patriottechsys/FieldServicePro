@@ -1,7 +1,7 @@
 """Parts & Materials utility functions."""
 import csv
 import io
-from datetime import datetime
+from datetime import timezone, datetime
 from sqlalchemy import func
 from models.part import Part, PART_CATEGORIES, PART_TRADES, UNIT_TYPES
 from models.inventory import InventoryStock, InventoryTransaction
@@ -233,11 +233,11 @@ def get_low_stock_alerts(db, org_id):
 
 def get_reorder_suggestions(db, org_id):
     """Generate reorder suggestions with usage-based quantities."""
-    from datetime import timedelta
+    from datetime import timezone, timedelta
     from models.job_material import JobMaterial
 
     alerts = get_low_stock_alerts(db, org_id)
-    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
 
     suggestions = []
     for alert in alerts:

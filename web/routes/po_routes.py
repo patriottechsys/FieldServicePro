@@ -1,7 +1,7 @@
 """Purchase Order CRUD routes."""
 
 import os
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from flask import (
     Blueprint, render_template, redirect, url_for, request,
     flash, jsonify, abort, current_app,
@@ -368,7 +368,7 @@ def po_upload_attachment(po_id):
         upload_dir = os.path.join(current_app.root_path, 'uploads', 'po', str(po_id))
         os.makedirs(upload_dir, exist_ok=True)
         safe_name = secure_filename(file.filename)
-        stored_name = f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{safe_name}"
+        stored_name = f"{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}_{safe_name}"
         file_path = os.path.join(upload_dir, stored_name)
         file.save(file_path)
 
@@ -399,6 +399,9 @@ def po_upload_attachment(po_id):
 def api_client_contracts(client_id):
     db = get_session()
     try:
+        client = db.query(Client).filter_by(id=client_id, organization_id=current_user.organization_id).first()
+        if not client:
+            return jsonify([]), 404
         contracts = db.query(Contract).filter_by(
             client_id=client_id, status=ContractStatus.active
         ).all()
@@ -417,6 +420,9 @@ def api_client_contracts(client_id):
 def api_client_pos(client_id):
     db = get_session()
     try:
+        client = db.query(Client).filter_by(id=client_id, organization_id=current_user.organization_id).first()
+        if not client:
+            return jsonify([]), 404
         pos = db.query(PurchaseOrder).filter_by(
             client_id=client_id, status=POStatus.active.value
         ).order_by(PurchaseOrder.issue_date.desc()).all()
@@ -452,6 +458,9 @@ def api_pos_selector(client_id):
     """JSON list of POs for the invoice form PO selector."""
     db = get_session()
     try:
+        client = db.query(Client).filter_by(id=client_id, organization_id=current_user.organization_id).first()
+        if not client:
+            return jsonify([]), 404
         from web.utils.po_utils import get_active_pos_for_client
         include_all = request.args.get('include_all', 'false').lower() == 'true'
 
@@ -472,18 +481,20 @@ def api_pos_selector(client_id):
 @login_required
 def api_po_capacity(po_id):
     """POST { amount, exclude_invoice_id } -> capacity check result."""
+    from web.utils.po_utils import check_po_capacity
+    from web.utils.validation import validate, POCapacitySchema
     db = get_session()
     try:
-        from web.utils.po_utils import check_po_capacity
-        po = db.query(PurchaseOrder).filter_by(id=po_id).first()
+        po = db.query(PurchaseOrder).filter_by(id=po_id, organization_id=current_user.organization_id).first()
         if not po:
             return jsonify({'error': 'PO not found'}), 404
 
         data = request.get_json(force=True)
-        amount = float(data.get('amount', 0))
-        exclude_id = data.get('exclude_invoice_id')
+        obj, err = validate(POCapacitySchema, data)
+        if err:
+            return jsonify(err), 400
 
-        result = check_po_capacity(db, po, amount, exclude_invoice_id=exclude_id)
+        result = check_po_capacity(db, po, obj.amount, exclude_invoice_id=obj.exclude_invoice_id)
         return jsonify(result)
     finally:
         db.close()

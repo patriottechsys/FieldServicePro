@@ -1,5 +1,5 @@
 """Main portal routes: dashboard, profile, ping, and stub endpoints for navigation."""
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request, g, jsonify, abort
 from sqlalchemy import func, desc, or_
 
@@ -127,7 +127,7 @@ def portal_dashboard():
         next_job = db.query(Job).filter(
             Job.client_id == client_id,
             Job.status == 'scheduled',
-            Job.scheduled_date >= datetime.utcnow()
+            Job.scheduled_date >= datetime.now(timezone.utc)
         ).order_by(Job.scheduled_date.asc()).first()
 
         # Recent Activity
@@ -280,7 +280,7 @@ def portal_property_detail(property_id):
             Job.property_id == prop.id,
             Job.client_id == user.client_id,
             Job.status == 'scheduled',
-            Job.scheduled_date >= datetime.utcnow()
+            Job.scheduled_date >= datetime.now(timezone.utc)
         ).order_by(Job.scheduled_date).limit(5).all()
 
         # Documents for jobs at this property
@@ -775,9 +775,9 @@ def portal_approve_quote(quote_id):
             return redirect(url_for('portal.portal_quote_detail', quote_id=quote_id))
 
         quote.status = 'approved'
-        quote.approved_date = datetime.utcnow()
+        quote.approved_date = datetime.now(timezone.utc)
         quote.portal_approved_by = user.id
-        quote.portal_approved_at = datetime.utcnow()
+        quote.portal_approved_at = datetime.now(timezone.utc)
 
         from models.portal_notification import PortalNotification
         notification = PortalNotification(
@@ -890,7 +890,7 @@ def portal_approve_change_order(job_id, co_id):
         co.client_approved = True
         co.client_approved_by = user.full_name
         co.client_approved_by_portal_id = user.id
-        co.client_approved_date = datetime.utcnow()
+        co.client_approved_date = datetime.now(timezone.utc)
         co.status = 'approved'
 
         from models.portal_notification import PortalNotification
@@ -939,7 +939,7 @@ def portal_reject_change_order(job_id, co_id):
         co.client_approved = False
         co.client_approved_by = user.full_name
         co.client_approved_by_portal_id = user.id
-        co.client_approved_date = datetime.utcnow()
+        co.client_approved_date = datetime.now(timezone.utc)
         co.client_rejection_reason = reason
         co.rejection_reason = reason
         co.status = 'rejected'
@@ -1012,7 +1012,7 @@ def portal_invoices():
         ).scalar() or 0)
 
         # Aging breakdown
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         aging = {'current': 0, 'thirty': 0, 'sixty': 0, 'ninety_plus': 0}
 
         outstanding_invs = db.query(Invoice).filter(
@@ -1084,7 +1084,7 @@ def portal_generate_statement():
         date_to = request.args.get('date_to')
 
         if not date_from or not date_to:
-            date_to_dt = datetime.utcnow()
+            date_to_dt = datetime.now(timezone.utc)
             date_from_dt = date_to_dt - timedelta(days=90)
         else:
             try:
@@ -1288,7 +1288,7 @@ def portal_report_service_history():
         date_to = request.args.get('date_to')
         property_id = request.args.get('property')
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         date_from_dt = datetime.strptime(date_from, '%Y-%m-%d') if date_from else now - timedelta(days=365)
         date_to_dt = datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1) if date_to else now
 
@@ -1360,7 +1360,7 @@ def portal_report_spend_summary():
         date_from = request.args.get('date_from')
         date_to = request.args.get('date_to')
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         date_from_dt = datetime.strptime(date_from, '%Y-%m-%d') if date_from else now - timedelta(days=365)
         date_to_dt = datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1) if date_to else now
 

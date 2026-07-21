@@ -3,7 +3,7 @@ NotificationService — central hub for all notification logic.
 Usage: NotificationService.notify('job_completed', job, triggered_by=current_user)
 """
 import logging
-from datetime import datetime
+from datetime import timezone, datetime
 from typing import Optional, List, Dict, Any
 
 from models.database import get_session
@@ -167,7 +167,7 @@ class NotificationService:
     def mark_all_read(user_id):
         db = get_session()
         try:
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             notifs = db.query(Notification).filter(
                 Notification.recipient_id == user_id,
                 Notification.is_read == False, Notification.is_dismissed == False,

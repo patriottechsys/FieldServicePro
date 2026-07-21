@@ -1,63 +1,66 @@
 {% extends "base.html" %}
-{% block title %}Notification Preferences{% endblock %}
+
+{% block title %}Notification Preferences — Settings{% endblock %}
 
 {% block content %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
-    <div>
-        <h1 style="margin:0;">Notification Preferences</h1>
-        <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">Control how and when you receive notifications</p>
+<div style="margin-bottom:var(--space-4);">
+    <h1 style="margin:0;font-size:var(--font-size-xl);">Notification Preferences</h1>
+    <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">Control how and when you receive notifications.</p>
+</div>
+
+<form method="POST" action="{{ url_for('notifications.preferences_save') }}">
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-bell" style="color:var(--color-accent);"></i>
+        <span>Notification Channels</span>
     </div>
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:2px solid var(--color-border);">
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Category</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:center;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;width:100px;">Enabled</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:center;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;width:100px;">In-App</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:center;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;width:100px;">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in categories_display %}
+                <tr style="border-bottom:1px solid var(--color-border);">
+                    <td style="padding:var(--space-2) var(--space-3);font-weight:500;">{{ c.label }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);text-align:center;">
+                        <input type="hidden" name="enabled_{{ c.category }}" value="0">
+                        <input type="checkbox" name="enabled_{{ c.category }}" value="1" {% if c.pref.enabled %}checked{% endif %}
+                            style="width:18px;height:18px;accent-color:var(--color-accent);">
+                    </td>
+                    <td style="padding:var(--space-2) var(--space-3);text-align:center;">
+                        <input type="hidden" name="in_app_{{ c.category }}" value="0">
+                        <input type="checkbox" name="in_app_{{ c.category }}" value="1" {% if c.pref.in_app %}checked{% endif %}
+                            style="width:18px;height:18px;accent-color:var(--color-accent);">
+                    </td>
+                    <td style="padding:var(--space-2) var(--space-3);text-align:center;">
+                        <input type="hidden" name="email_{{ c.category }}" value="0">
+                        <input type="checkbox" name="email_{{ c.category }}" value="1" {% if c.pref.email %}checked{% endif %}
+                            style="width:18px;height:18px;accent-color:var(--color-accent);">
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div style="display:flex;gap:var(--space-2);justify-content:space-between;">
     <div style="display:flex;gap:var(--space-2);">
         <form method="POST" action="{{ url_for('notifications.preferences_test') }}" style="display:inline;">
             <button type="submit" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-send"></i> Send Test</button>
         </form>
-        <a href="{{ url_for('notifications.notification_center') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">
-            <i class="bi bi-bell"></i> Notification Center
-        </a>
+        <a href="{{ url_for('notifications.notification_center') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-bell"></i> Notification Center</a>
     </div>
-</div>
-
-<form method="POST" action="{{ url_for('notifications.preferences_save') }}">
-<div class="card">
-    <div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;">
-        <thead>
-            <tr style="border-bottom:2px solid var(--color-border);">
-                <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;">Category</th>
-                <th style="padding:var(--space-2) var(--space-3);text-align:center;font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;width:100px;">Enabled</th>
-                <th style="padding:var(--space-2) var(--space-3);text-align:center;font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;width:100px;">In-App</th>
-                <th style="padding:var(--space-2) var(--space-3);text-align:center;font-size:var(--font-size-xs);color:var(--color-text-muted);text-transform:uppercase;width:100px;">Email</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for c in categories_display %}
-            <tr style="border-bottom:1px solid var(--color-border);">
-                <td style="padding:var(--space-2) var(--space-3);font-weight:500;">{{ c.label }}</td>
-                <td style="padding:var(--space-2) var(--space-3);text-align:center;">
-                    <input type="hidden" name="enabled_{{ c.category }}" value="0">
-                    <input type="checkbox" name="enabled_{{ c.category }}" value="1" {% if c.pref.enabled %}checked{% endif %}
-                        style="width:18px;height:18px;accent-color:var(--color-accent);">
-                </td>
-                <td style="padding:var(--space-2) var(--space-3);text-align:center;">
-                    <input type="hidden" name="in_app_{{ c.category }}" value="0">
-                    <input type="checkbox" name="in_app_{{ c.category }}" value="1" {% if c.pref.in_app %}checked{% endif %}
-                        style="width:18px;height:18px;accent-color:var(--color-accent);">
-                </td>
-                <td style="padding:var(--space-2) var(--space-3);text-align:center;">
-                    <input type="hidden" name="email_{{ c.category }}" value="0">
-                    <input type="checkbox" name="email_{{ c.category }}" value="1" {% if c.pref.email %}checked{% endif %}
-                        style="width:18px;height:18px;accent-color:var(--color-accent);">
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    </div>
-    <div style="padding:var(--space-3) var(--space-4);border-top:1px solid var(--color-border);display:flex;justify-content:flex-end;">
-        <button type="submit" class="btn btn-accent"><i class="bi bi-check-lg"></i> Save Preferences</button>
+    <div style="display:flex;gap:var(--space-2);">
+        <a href="{{ url_for('settings_bp.settings_page') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-arrow-left"></i> Back to Settings</a>
+        <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);"><i class="bi bi-check-lg"></i> Save Preferences</button>
     </div>
 </div>
 </form>
-
-<style>table tbody tr:hover{background:var(--color-surface-raised);}</style>
 {% endblock %}

@@ -5,7 +5,7 @@
 {% block content %}
 <!-- Breadcrumb -->
 <nav style="margin-bottom:var(--space-3);font-size:var(--font-size-sm);">
-  <a href="{{ url_for('job_detail', job_id=job.id) }}" style="color:var(--color-text-muted);text-decoration:none;">Job #{{ job.id }}</a>
+  <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" style="color:var(--color-text-muted);text-decoration:none;">Job #{{ job.id }}</a>
   <span style="color:var(--color-text-muted);margin:0 var(--space-1);">/</span>
   <span style="color:var(--color-text-secondary);">Lien Waivers</span>
 </nav>
@@ -63,7 +63,7 @@
           <td><span class="badge" style="background:var(--color-{{ waiver.status_color }});color:#fff;">{{ waiver.status_display }}</span></td>
           <td>
             {% if waiver.invoice_id %}
-            <a href="{{ url_for('invoice_detail', invoice_id=waiver.invoice_id) }}" style="font-size:var(--font-size-sm);">Inv #{{ waiver.invoice_id }}</a>
+            <a href="{{ url_for('invoices_bp.invoice_detail', invoice_id=waiver.invoice_id) }}" style="font-size:var(--font-size-sm);">Inv #{{ waiver.invoice_id }}</a>
             {% else %}—{% endif %}
           </td>
           <td>

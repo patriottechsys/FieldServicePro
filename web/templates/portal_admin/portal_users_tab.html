@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom:var(--space-3);">
-    <a href="{{ url_for('client_detail', client_id=client.id) }}" style="color:var(--color-text-muted);text-decoration:none;font-size:var(--font-size-sm);">
+    <a href="{{ url_for('clients_bp.client_detail', client_id=client.id) }}" style="color:var(--color-text-muted);text-decoration:none;font-size:var(--font-size-sm);">
         <i class="bi bi-arrow-left"></i> Back to {{ client.display_name }}
     </a>
 </div>

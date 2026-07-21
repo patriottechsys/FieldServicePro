@@ -60,7 +60,7 @@
     <div class="card" style="border: none; background: var(--color-surface-raised);">
       <div class="card-body" style="padding: var(--space-3) var(--space-4);">
         <div style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: 2px;">Client</div>
-        <a href="{{ url_for('client_detail', client_id=contract.client_id) }}"
+        <a href="{{ url_for('clients_bp.client_detail', client_id=contract.client_id) }}"
            style="font-weight: var(--font-weight-semibold);">
           {{ contract.client.display_name if contract.client else '---' }}
         </a>
@@ -292,7 +292,7 @@
               {% for job in jobs %}
               {% set ss = job.sla_status %}
               <tr {% if ss == 'breached' %}style="background: var(--color-danger-light);"{% elif ss == 'at_risk' %}style="background: rgba(245,158,11,0.08);"{% endif %}>
-                <td style="font-family: monospace;"><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.job_number or ('#' ~ job.id) }}</a></td>
+                <td style="font-family: monospace;"><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}">{{ job.job_number or ('#' ~ job.id) }}</a></td>
                 <td>{{ job.title }}</td>
                 <td><span class="badge badge-{{ job.status }}">{{ job.status }}</span></td>
                 <td>{{ job.priority or '---' }}</td>
@@ -306,7 +306,7 @@
                 <td>{{ job.sla_response_deadline.strftime('%b %d %H:%M') if job.sla_response_deadline else '---' }}</td>
                 <td>{{ job.sla_resolution_deadline.strftime('%b %d %H:%M') if job.sla_resolution_deadline else '---' }}</td>
                 <td>{{ job.created_at.strftime('%b %d') if job.created_at else '---' }}</td>
-                <td><a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-sm btn-ghost">View</a></td>
+                <td><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" class="btn btn-sm btn-ghost">View</a></td>
               </tr>
               {% endfor %}
             </tbody>

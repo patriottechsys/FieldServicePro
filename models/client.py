@@ -1,6 +1,6 @@
 """Client, Property, and Contact models."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 import enum
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Text, Float
 from sqlalchemy.orm import relationship
@@ -191,8 +191,8 @@ class ClientNote(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     content = Column(Text, nullable=False)
     is_starred = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
     client = relationship("Client", back_populates="client_notes")
 

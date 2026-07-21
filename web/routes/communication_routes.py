@@ -1,5 +1,5 @@
 """Communication Log CRUD routes."""
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import or_, desc
@@ -398,8 +398,8 @@ def _build_from_form(db, log):
             try:
                 log.communication_date = datetime.strptime(comm_date, '%Y-%m-%d')
             except ValueError:
-                log.communication_date = datetime.utcnow()
+                log.communication_date = datetime.now(timezone.utc)
     elif is_new:
-        log.communication_date = datetime.utcnow()
+        log.communication_date = datetime.now(timezone.utc)
 
     return log

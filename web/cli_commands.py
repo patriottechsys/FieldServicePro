@@ -228,18 +228,18 @@ notif_cli = Blueprint('notif_cli', __name__, cli_group='notifications')
 @click.option('--dry-run', is_flag=True, default=False, help='Preview without sending.')
 def send_scheduled_notifications(dry_run):
     """Daily scheduled notification runner."""
-    from datetime import datetime, timedelta, date as date_type
+    from datetime import timezone, datetime, timedelta, date as date_type
     from models.database import get_session
     from models.notification import NotificationLog
     from web.utils.notification_service import NotificationService
 
     db = get_session()
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     today = now.date()
     stats = {}
 
     def already_sent(entity_type, entity_id, event_key, within_hours=20):
-        cutoff = datetime.utcnow() - timedelta(hours=within_hours)
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=within_hours)
         return db.query(NotificationLog).filter(
             NotificationLog.entity_type == entity_type,
             NotificationLog.entity_id == entity_id,
@@ -389,13 +389,13 @@ def send_scheduled_notifications(dry_run):
 @click.option('--days', default=90, help='Remove dismissed notifications older than N days.')
 def cleanup_old_notifications(days):
     """Remove old dismissed notifications."""
-    from datetime import datetime, timedelta
+    from datetime import timezone, datetime, timedelta
     from models.database import get_session
     from models.notification import Notification
 
     db = get_session()
     try:
-        cutoff = datetime.utcnow() - timedelta(days=days)
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
         deleted = db.query(Notification).filter(
             Notification.is_dismissed == True,
             Notification.created_at < cutoff,

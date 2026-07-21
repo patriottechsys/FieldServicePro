@@ -9,8 +9,8 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb" style="margin: 0;">
-    <li class="breadcrumb-item"><a href="{{ url_for('jobs_page') }}">Jobs</a></li>
-    <li class="breadcrumb-item"><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.job_number }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('jobs_bp.jobs_page') }}">Jobs</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}">{{ job.job_number }}</a></li>
     <li class="breadcrumb-item active">{% if co %}{{ co.change_order_number }}{% else %}New CO{% endif %}</li>
   </ol>
 </nav>
@@ -142,7 +142,7 @@
 
           <!-- Actions -->
           <div style="display:flex;gap:var(--space-2);justify-content:flex-end;">
-            <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-ghost">Cancel</a>
+            <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" class="btn btn-ghost">Cancel</a>
             <button type="submit" name="action" value="draft" class="btn btn-ghost"><i class="bi bi-floppy"></i> Save Draft</button>
             <button type="submit" name="action" value="submit" class="btn btn-warning"><i class="bi bi-send"></i> Submit for Approval</button>
           </div>

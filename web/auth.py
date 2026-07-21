@@ -3,7 +3,7 @@
 import os
 import secrets
 from datetime import datetime, timedelta, timezone
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 import sys
@@ -90,6 +90,8 @@ def login():
             login_user(user, remember=remember)
 
             next_page = request.args.get('next')
+            if next_page and ('://' in next_page or next_page.startswith('//')):
+                next_page = None
             return redirect(next_page or url_for('dashboard'))
         finally:
             db_session.close()
@@ -210,6 +212,9 @@ def forgot_password():
 @auth_bp.route('/demo')
 def demo():
     """Create a demo account pre-loaded with realistic FieldServicePro data."""
+    import web.app as app_module
+    if getattr(app_module, 'IS_PRODUCTION', False):
+        return ('Demo is not available in production.', 404)
     if current_user.is_authenticated:
         logout_user()
 

@@ -79,12 +79,12 @@
               {% for inv in linked_invoices %}
               <tr>
                 <td style="font-weight: var(--font-weight-semibold);">
-                  <a href="{{ url_for('invoice_detail', invoice_id=inv.id) }}">{{ inv.invoice_number }}</a>
+                  <a href="{{ url_for('invoices_bp.invoice_detail', invoice_id=inv.id) }}">{{ inv.invoice_number }}</a>
                 </td>
                 <td style="font-size: var(--font-size-xs);">{{ inv.issued_date.strftime('%b %d, %Y') if inv.issued_date else '---' }}</td>
                 <td class="col-number">${{ "{:,.2f}".format(inv.total or 0) }}</td>
                 <td><span class="badge badge-{{ inv.status }}">{{ inv.status|title }}</span></td>
-                <td><a href="{{ url_for('invoice_detail', invoice_id=inv.id) }}" class="btn btn-sm btn-ghost">View</a></td>
+                <td><a href="{{ url_for('invoices_bp.invoice_detail', invoice_id=inv.id) }}" class="btn btn-sm btn-ghost">View</a></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -112,7 +112,7 @@
       <div class="card-body">
         <div style="font-size: var(--font-size-sm); display: grid; grid-template-columns: auto 1fr; gap: 4px var(--space-3);">
           <span style="color: var(--color-text-muted);">Client</span>
-          <a href="{{ url_for('client_detail', client_id=po.client_id) }}">{{ po.client.display_name if po.client else '---' }}</a>
+          <a href="{{ url_for('clients_bp.client_detail', client_id=po.client_id) }}">{{ po.client.display_name if po.client else '---' }}</a>
           <span style="color: var(--color-text-muted);">Issue Date</span>
           <span>{{ po.issue_date.strftime('%b %d, %Y') }}</span>
           <span style="color: var(--color-text-muted);">Expiry</span>

@@ -4,7 +4,7 @@ Each function takes an open db session and returns a summary dict.
 Safe to run multiple times (idempotent).
 """
 
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from models.contract import (Contract, ContractStatus, ContractActivityLog,
                               ContractLineItem, ServiceFrequency)
 from models.job import Job
@@ -179,7 +179,7 @@ def generate_scheduled_jobs(db):
             priority='medium',
             job_type='maintenance',
             estimated_amount=li.line_total,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
         )
         db.add(job)
         db.flush()
@@ -211,7 +211,7 @@ def check_sla_breaches(db):
     Find jobs whose SLA deadline has passed without resolution.
     Mark sla_response_met / sla_resolution_met = False for tracking.
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     newly_flagged = 0
 
     # Response deadline passed, no response recorded

@@ -1,7 +1,7 @@
 """Parts usage reporting."""
 import io
 import csv
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from flask import Blueprint, render_template, request, Response
 from flask_login import login_required, current_user
 from sqlalchemy import desc
@@ -34,13 +34,13 @@ def _get_date_range():
     if date_from_str:
         date_from = datetime.strptime(date_from_str, '%Y-%m-%d')
     else:
-        date_from = datetime.utcnow() - timedelta(days=30)
+        date_from = datetime.now(timezone.utc) - timedelta(days=30)
         date_from_str = date_from.strftime('%Y-%m-%d')
 
     if date_to_str:
         date_to = datetime.strptime(date_to_str + ' 23:59:59', '%Y-%m-%d %H:%M:%S')
     else:
-        date_to = datetime.utcnow()
+        date_to = datetime.now(timezone.utc)
         date_to_str = date_to.strftime('%Y-%m-%d')
 
     return date_from, date_to, date_from_str, date_to_str

@@ -1,6 +1,6 @@
 """Invoice and Payment models."""
 
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey, Text, Float, Boolean
 from sqlalchemy.orm import relationship
 import enum
@@ -131,7 +131,7 @@ class Invoice(Base):
         terms = self.payment_terms
         ref_date = self.issued_date
         if ref_date is None:
-            ref_date = datetime.utcnow()
+            ref_date = datetime.now(timezone.utc)
         if hasattr(ref_date, 'date'):
             ref_date = ref_date.date()
 

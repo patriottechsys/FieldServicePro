@@ -343,7 +343,7 @@ def send_survey_manual():
             flash('Could not send — check client email or existing survey.', 'warning')
     finally:
         db.close()
-    return redirect(url_for('job_detail', job_id=job_id))
+    return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
 
 
 @feedback_bp.route('/technician/<int:tech_id>')

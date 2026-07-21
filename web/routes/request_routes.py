@@ -1,5 +1,5 @@
 """Routes for service request intake and management."""
-from datetime import datetime
+from datetime import timezone, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import desc, or_
@@ -67,7 +67,7 @@ def request_list():
         # Stats
         new_count = db.query(ServiceRequest).filter_by(
             organization_id=org_id, status='new').count()
-        today = datetime.utcnow().date()
+        today = datetime.now(timezone.utc).date()
         today_count = db.query(ServiceRequest).filter(
             ServiceRequest.organization_id == org_id,
             ServiceRequest.created_at >= datetime.combine(today, datetime.min.time())
@@ -295,7 +295,7 @@ def request_convert_to_job(request_id):
         last_job = db.query(Job).filter_by(organization_id=org_id).order_by(
             Job.id.desc()).first()
         job_seq = (last_job.id + 1) if last_job else 1
-        job_number = f"JOB-{datetime.utcnow().year}-{job_seq:04d}"
+        job_number = f"JOB-{datetime.now(timezone.utc).year}-{job_seq:04d}"
 
         job = Job(
             organization_id=org_id,
@@ -329,6 +329,6 @@ def request_convert_to_job(request_id):
             pass
 
         flash(f'Request converted to Job {job.job_number}.', 'success')
-        return redirect(url_for('job_detail', job_id=job.id))
+        return redirect(url_for('jobs_bp.job_detail', job_id=job.id))
     finally:
         db.close()

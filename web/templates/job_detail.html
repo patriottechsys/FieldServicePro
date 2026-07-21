@@ -17,7 +17,7 @@
             <a href="{{ url_for('projects_bp.project_detail', project_id=job_obj.project_id) }}" style="color:var(--color-text-muted);text-decoration:none;">{{ job_obj.project.project_number }}</a>
             <span style="color:var(--color-text-muted);">/</span>
             {% endif %}
-            <a href="{{ url_for('jobs_page') }}" style="color:var(--color-text-muted);text-decoration:none;">
+            <a href="{{ url_for('jobs_bp.jobs_page') }}" style="color:var(--color-text-muted);text-decoration:none;">
                 <i class="bi bi-arrow-left"></i> Jobs
             </a>
         </div>
@@ -249,7 +249,7 @@
 <div class="card" style="margin-bottom: var(--space-4);">
   <div class="card-header"><h3 class="card-title"><i class="bi bi-sticky" style="color: var(--color-text-secondary);"></i> Project Manager Notes</h3></div>
   <div class="card-body">
-    <form method="POST" action="{{ url_for('update_pm_notes', job_id=job_obj.id) }}">
+    <form method="POST" action="{{ url_for('jobs_bp.update_pm_notes', job_id=job_obj.id) }}">
       <textarea name="project_manager_notes" class="form-control" rows="3" {% if user.role not in ('owner', 'admin', 'dispatcher') %}readonly{% endif %}>{{ job_obj.project_manager_notes or '' }}</textarea>
       {% if user.role in ('owner', 'admin', 'dispatcher') %}
       <button type="submit" class="btn btn-sm btn-ghost" style="margin-top: var(--space-2);">Save Notes</button>
@@ -327,7 +327,7 @@
         <div class="card" style="margin-bottom: 1.5rem;">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>Line Items</span>
-                <button class="btn btn-sm btn-secondary">New Line Item</button>
+                <button class="btn btn-sm btn-secondary" disabled title="Coming soon">New Line Item</button>
             </div>
             <div class="card-body" style="padding: 0;">
                 <table class="data-table">
@@ -370,7 +370,7 @@
         <div class="card" style="margin-bottom: 1.5rem;">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>Labour</span>
-                <button class="btn btn-sm btn-secondary">New Time Entry</button>
+                <a href="{{ url_for('time_tracking_bp.time_entry_new') }}" class="btn btn-sm btn-secondary">New Time Entry</a>
             </div>
             <div class="card-body">
                 <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Time tracked to this job by you or your team will show here</p>
@@ -381,7 +381,7 @@
         <div class="card" style="margin-bottom: 1.5rem;">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>Expenses</span>
-                <button class="btn btn-sm btn-secondary">New Expense</button>
+                <button class="btn btn-sm btn-secondary" disabled title="Coming soon">New Expense</button>
             </div>
             <div class="card-body">
                 <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Get an accurate picture of various job costs by recording expenses.</p>
@@ -392,7 +392,7 @@
         <div class="card" style="margin-bottom: 1.5rem;">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>Visits</span>
-                <button class="btn btn-sm btn-secondary">New Visit</button>
+                <button class="btn btn-sm btn-secondary" disabled title="Coming soon">New Visit</button>
             </div>
             <div class="card-body" style="padding: 0;">
                 {% if job.scheduled_date %}
@@ -459,7 +459,7 @@
                 <div style="padding: 1.25rem; color: var(--text-secondary); font-size: 0.875rem;">
                     No invoices yet
                     {% if job.status == 'completed' %}
-                    — <a href="#" style="color: var(--primary);">Create invoice</a>
+                    — <a href="{{ url_for('invoices_bp.invoice_new') }}" style="color: var(--primary);">Create invoice</a>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -481,9 +481,9 @@
                     {% for note in job_notes %}
                     <div class="client-note">
                         <div class="note-header">
-                            <div class="note-avatar">{{ user.first_name[0] if user.first_name else 'U' }}</div>
+                            <div class="note-avatar">{{ note.author_initials if note.author_initials is defined else (user.first_name[0] if user.first_name else 'U') }}</div>
                             <div class="note-meta">
-                                <span class="note-author">{{ user.first_name }} {{ user.last_name }}</span>
+                                <span class="note-author">{{ note.author_name if note.author_name is defined else (user.first_name ~ ' ' ~ user.last_name) }}</span>
                                 <span class="note-date">{{ note.created_at[:10] if note.created_at else '' }}</span>
                             </div>
                         </div>

@@ -104,7 +104,7 @@
     <tbody>{% for q in top_opportunities %}
     {% set days = (today - q.created_at.date()).days if q.created_at else 0 %}
     <tr style="border-bottom:1px solid var(--color-border);{% if days > 14 %}background:rgba(245,158,11,.05);{% endif %}">
-      <td style="padding:var(--space-2) var(--space-3);font-weight:600;"><a href="{{ url_for('quotes_page') }}" style="color:var(--color-accent);text-decoration:none;">{{ q.quote_number }}</a></td>
+      <td style="padding:var(--space-2) var(--space-3);font-weight:600;"><a href="{{ url_for('quotes_bp.quotes_page') }}" style="color:var(--color-accent);text-decoration:none;">{{ q.quote_number }}</a></td>
       <td style="padding:var(--space-2) var(--space-3);">{{ q.client.display_name if q.client else '&mdash;' }}</td>
       <td style="padding:var(--space-2) var(--space-3);text-align:right;font-weight:700;">${{ "{:,.0f}".format(q.total or 0) }}</td>
       <td style="padding:var(--space-2) var(--space-3);"><span style="font-size:var(--font-size-xs);padding:2px 8px;border-radius:var(--radius-sm);background:{% if q.status == 'approved' %}var(--color-success){% elif q.status == 'sent' %}var(--color-accent){% else %}var(--color-surface-raised){% endif %};color:{% if q.status in ('approved','sent') %}#fff{% else %}inherit{% endif %};">{{ q.status|title }}</span></td>

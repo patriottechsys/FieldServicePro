@@ -1,5 +1,5 @@
 """Inventory management routes: locations, stock, dashboard, transactions."""
-from datetime import datetime
+from datetime import timezone, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import desc, or_
@@ -229,7 +229,7 @@ def adjust_stock():
         old_qty = stock.quantity_on_hand
         diff = new_qty - old_qty
         stock.quantity_on_hand = new_qty
-        stock.last_counted_at = datetime.utcnow()
+        stock.last_counted_at = datetime.now(timezone.utc)
 
         part = db.query(Part).filter_by(id=part_id).first()
         loc = db.query(InventoryLocation).filter_by(id=location_id).first()
@@ -289,7 +289,7 @@ def receive_stock():
             db.flush()
 
         stock.quantity_on_hand += quantity
-        stock.last_received_at = datetime.utcnow()
+        stock.last_received_at = datetime.now(timezone.utc)
 
         tx = InventoryTransaction(
             organization_id=current_user.organization_id,
@@ -323,6 +323,10 @@ def receive_stock():
 def api_location_stock(location_id):
     db = get_session()
     try:
+        from models.inventory import InventoryLocation
+        loc = db.query(InventoryLocation).filter_by(id=location_id, organization_id=current_user.organization_id).first()
+        if not loc:
+            return jsonify([]), 404
         stocks = db.query(InventoryStock).filter_by(
             location_id=location_id
         ).join(Part).filter(Part.is_active == True).order_by(Part.name).all()
