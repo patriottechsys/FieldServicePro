@@ -5,8 +5,8 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb" style="margin: 0;">
-    <li class="breadcrumb-item"><a href="{{ url_for('jobs_page') }}">Jobs</a></li>
-    <li class="breadcrumb-item"><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.job_number }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('jobs_bp.jobs_page') }}">Jobs</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}">{{ job.job_number }}</a></li>
     <li class="breadcrumb-item active">{{ 'Edit Phase' if phase else 'New Phase' }}</li>
   </ol>
 </nav>
@@ -23,7 +23,7 @@
         <strong style="margin-left: 4px;">{{ job.job_number }}</strong>
         <span style="margin-left: var(--space-2); color: var(--color-text-secondary);">{{ job.title }}</span>
       </div>
-      <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-sm btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+      <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" class="btn btn-sm btn-ghost"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
   </div>
 
@@ -144,7 +144,7 @@
 
         <!-- Actions -->
         <div style="display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-4);">
-          <a href="{{ url_for('job_detail', job_id=job.id) }}" class="btn btn-ghost">Cancel</a>
+          <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" class="btn btn-ghost">Cancel</a>
           <button type="submit" class="btn btn-accent">
             <i class="bi bi-check-lg"></i> {{ 'Save Changes' if phase else 'Add Phase' }}
           </button>

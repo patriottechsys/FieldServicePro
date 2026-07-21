@@ -109,7 +109,7 @@ def send_service_request_notification(job, portal_user):
             ('Priority', (job.priority or 'normal').title()),
             ('Description', (job.title or job.description or '')[:200]),
         ],
-        action_url=url_for('job_detail', job_id=job.id, _external=True),
+        action_url=url_for('jobs_bp.job_detail', job_id=job.id, _external=True),
         action_text='View Request',
     )
     send_email(

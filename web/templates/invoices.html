@@ -65,7 +65,7 @@
             <input type="text" id="invoiceSearch" class="form-control" placeholder="Search invoices..." oninput="filterInvoices()"
                    style="padding-left:2rem;width:240px;">
         </div>
-        <a class="btn btn-accent" href="{{ url_for('invoice_new') }}">
+        <a class="btn btn-accent" href="{{ url_for('invoices_bp.invoice_new') }}">
             <i class="bi bi-plus-lg"></i> New Invoice
         </a>
     </div>
@@ -154,7 +154,7 @@
             <i class="bi bi-receipt" style="font-size:3rem;color:var(--color-text-muted);"></i>
             <h3 style="margin:var(--space-2) 0 var(--space-1);">No invoices yet</h3>
             <p style="color:var(--color-text-muted);">Invoices will appear here when jobs are completed and invoiced</p>
-            <a class="btn btn-accent" href="{{ url_for('invoice_new') }}">
+            <a class="btn btn-accent" href="{{ url_for('invoices_bp.invoice_new') }}">
                 <i class="bi bi-plus-lg"></i> Create First Invoice
             </a>
         </div>
@@ -171,7 +171,7 @@
 {% block scripts %}
 <script>
 function applyStatusFilter(status) {
-    window.location.href = '{{ url_for("invoices_page") }}' + (status ? '?status=' + status : '');
+    window.location.href = '{{ url_for("invoices_bp.invoices_page") }}' + (status ? '?status=' + status : '');
 }
 
 function filterInvoices() {

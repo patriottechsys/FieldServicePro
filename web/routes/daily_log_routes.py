@@ -1,6 +1,6 @@
 """Daily Log routes — list, create, edit, detail, review, print, calendar."""
 import json
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
@@ -245,7 +245,7 @@ def daily_log_review(log_id):
         if log:
             log.status = 'reviewed'
             log.reviewed_by_id = current_user.id
-            log.reviewed_at = datetime.utcnow()
+            log.reviewed_at = datetime.now(timezone.utc)
             db.commit()
             flash(f'Daily Log {log.log_number} marked as reviewed.', 'success')
     finally:

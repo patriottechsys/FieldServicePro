@@ -118,7 +118,7 @@
             <h3 style="margin:0 0 var(--space-2);font-size:var(--font-size-sm);font-weight:700;"><i class="bi bi-diagram-3"></i> Project Context</h3>
             <div style="font-size:var(--font-size-sm);">
                 <div>Project: <a href="{{ url_for('projects_bp.project_detail', project_id=rfi.project_id) }}" style="color:var(--color-accent);">{{ rfi.project.title }}</a></div>
-                {% if rfi.job %}<div style="margin-top:var(--space-1);">Job: <a href="{{ url_for('job_detail', job_id=rfi.job_id) }}" style="color:var(--color-accent);">{{ rfi.job.title }}</a></div>{% endif %}
+                {% if rfi.job %}<div style="margin-top:var(--space-1);">Job: <a href="{{ url_for('jobs_bp.job_detail', job_id=rfi.job_id) }}" style="color:var(--color-accent);">{{ rfi.job.title }}</a></div>{% endif %}
                 {% if rfi.phase %}<div style="margin-top:var(--space-1);">Phase: {{ rfi.phase.name }}</div>{% endif %}
             </div>
         </div>

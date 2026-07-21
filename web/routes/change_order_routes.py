@@ -1,6 +1,6 @@
 """Change Order CRUD routes."""
 
-from datetime import date, datetime
+from datetime import timezone, date, datetime
 from flask import (
     Blueprint, request, render_template, redirect,
     url_for, flash, abort, jsonify,
@@ -54,7 +54,7 @@ def new_change_order(job_id):
         allowed, reason_msg = can_create_change_order(job)
         if not allowed:
             flash(reason_msg, 'warning')
-            return redirect(url_for('job_detail', job_id=job_id))
+            return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
 
         if current_user.role == 'viewer':
             abort(403)
@@ -186,14 +186,14 @@ def approve_change_order(job_id, co_id):
 
         co.status = ChangeOrderStatus.approved.value
         co.internal_approved_by_id = current_user.id
-        co.internal_approved_date = datetime.utcnow()
+        co.internal_approved_date = datetime.now(timezone.utc)
 
         # Record client approval if provided from modal
         client_approved_by = request.form.get('client_approved_by')
         if client_approved_by:
             co.client_approved = True
             co.client_approved_by = client_approved_by
-            co.client_approved_date = datetime.utcnow()
+            co.client_approved_date = datetime.now(timezone.utc)
 
         job = db.query(Job).filter_by(id=job_id).first()
         apply_approved_change_order(db, co)

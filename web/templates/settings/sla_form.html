@@ -1,37 +1,30 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Edit' if action == 'edit' else 'New' }} SLA Template{% endblock %}
-{% block page_title %}{{ 'Edit SLA' if action == 'edit' else 'New SLA Template' }}{% endblock %}
 
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb" style="margin: 0;">
-    <li class="breadcrumb-item"><a href="{{ url_for('settings_page') }}">Settings</a></li>
-    <li class="breadcrumb-item"><a href="{{ url_for('sla.sla_list') }}">SLA Templates</a></li>
-    <li class="breadcrumb-item active">{{ 'Edit' if action == 'edit' else 'New' }}</li>
-  </ol>
-</nav>
-{% endblock %}
+{% block title %}{{ 'Edit' if action == 'edit' else 'New' }} SLA Template — Settings{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px;">
+<div style="max-width:800px;">
+  <div style="margin-bottom:var(--space-4);">
+    <h1 style="margin:0;font-size:var(--font-size-xl);">{{ 'Edit SLA' if action == 'edit' else 'New SLA Template' }}</h1>
+    <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">{{ 'Update this service level agreement template.' if action == 'edit' else 'Create a new service level agreement template.' }}</p>
+  </div>
 
   <form method="POST">
-
-    <!-- Basic Information -->
-    <div class="card" style="margin-bottom: var(--space-4);">
-      <div class="card-header">
-        <h3 class="card-title">Basic Information</h3>
+    <div class="card" style="margin-bottom:var(--space-4);">
+      <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-info-circle" style="color:var(--color-accent);"></i>
+        <span>Basic Information</span>
       </div>
       <div class="card-body">
-        <div class="form-group">
-          <label class="form-label">SLA Name <span style="color: var(--color-danger);">*</span></label>
+        <div style="margin-bottom:var(--space-3);">
+          <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">SLA Name <span style="color:var(--color-danger);">*</span></label>
           <input type="text" name="sla_name" class="form-control"
                  value="{{ sla.sla_name if sla else '' }}"
                  placeholder="e.g., Premium 4-Hour Response" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4);">
-          <div class="form-group">
-            <label class="form-label">Priority Level <span style="color: var(--color-danger);">*</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3);">
+          <div>
+            <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Priority Level <span style="color:var(--color-danger);">*</span></label>
             <select name="priority_level" class="form-control" required>
               {% for pl in PriorityLevel %}
               <option value="{{ pl.value }}"
@@ -41,65 +34,61 @@
               {% endfor %}
             </select>
           </div>
-          <div class="form-group">
-            <label class="form-label">
-              Response Time (hrs) <span style="color: var(--color-danger);">*</span>
-            </label>
+          <div>
+            <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Response Time (hrs) <span style="color:var(--color-danger);">*</span></label>
             <input type="number" name="response_time_hours" class="form-control"
                    step="0.5" min="0.5"
                    value="{{ sla.response_time_hours if sla else '4' }}" required>
-            <div class="form-text">Max hours to dispatch</div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Max hours to dispatch</div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Resolution Time (hrs)</label>
+          <div>
+            <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Resolution Time (hrs)</label>
             <input type="number" name="resolution_time_hours" class="form-control"
                    step="0.5" min="0"
                    value="{{ sla.resolution_time_hours if sla else '' }}"
                    placeholder="Optional">
-            <div class="form-text">Leave blank for best effort</div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-1);">Leave blank for best effort</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Business Hours Configuration -->
-    <div class="card" style="margin-bottom: var(--space-4);">
-      <div class="card-header">
-        <h3 class="card-title">Business Hours Configuration</h3>
+    <div class="card" style="margin-bottom:var(--space-4);">
+      <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-clock" style="color:var(--color-accent);"></i>
+        <span>Business Hours Configuration</span>
       </div>
       <div class="card-body">
-        <div style="margin-bottom: var(--space-4);">
-          <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+        <div style="margin-bottom:var(--space-3);">
+          <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;">
             <input type="checkbox" id="business_hours_only"
                    name="business_hours_only" value="1"
-                   style="width: 1rem; height: 1rem; accent-color: var(--color-accent);"
+                   style="width:1rem;height:1rem;accent-color:var(--color-accent);"
                    {{ 'checked' if not sla or sla.business_hours_only else '' }}>
-            <span style="font-weight: var(--font-weight-medium);">
-              Clock runs on business hours only
-            </span>
-            <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">(uncheck for 24/7 SLAs)</span>
+            <span style="font-weight:500;">Clock runs on business hours only</span>
+            <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);">(uncheck for 24/7 SLAs)</span>
           </label>
         </div>
-        <div id="biz-hours-config" style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: var(--space-4);">
-          <div class="form-group">
-            <label class="form-label">Start Time</label>
+        <div id="biz-hours-config" style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:var(--space-3);">
+          <div>
+            <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Start Time</label>
             <input type="time" name="business_hours_start" class="form-control"
                    value="{{ sla.business_hours_start if sla else '08:00' }}">
           </div>
-          <div class="form-group">
-            <label class="form-label">End Time</label>
+          <div>
+            <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">End Time</label>
             <input type="time" name="business_hours_end" class="form-control"
                    value="{{ sla.business_hours_end if sla else '17:00' }}">
           </div>
-          <div class="form-group">
-            <label class="form-label">Business Days</label>
-            <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; padding-top: var(--space-1);">
+          <div>
+            <label style="display:block;font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-1);">Business Days</label>
+            <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;padding-top:var(--space-1);">
               {% set biz_days = sla.business_days_list if sla else ['mon','tue','wed','thu','fri'] %}
               {% for day, label in [('mon','Mon'),('tue','Tue'),('wed','Wed'),('thu','Thu'),
                                     ('fri','Fri'),('sat','Sat'),('sun','Sun')] %}
-              <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: var(--font-size-sm);">
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:var(--font-size-sm);">
                 <input type="checkbox" name="business_days" value="{{ day }}" id="day_{{ day }}"
-                       style="accent-color: var(--color-accent);"
+                       style="accent-color:var(--color-accent);"
                        {{ 'checked' if day in biz_days else '' }}>
                 {{ label }}
               </label>
@@ -110,10 +99,10 @@
       </div>
     </div>
 
-    <!-- Penalties & Notes -->
-    <div class="card" style="margin-bottom: var(--space-4);">
-      <div class="card-header">
-        <h3 class="card-title">Penalties &amp; Notes</h3>
+    <div class="card" style="margin-bottom:var(--space-4);">
+      <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-exclamation-triangle" style="color:var(--color-warning);"></i>
+        <span>Penalties &amp; Notes</span>
       </div>
       <div class="card-body">
         <textarea name="penalties" class="form-control" rows="3"
@@ -121,30 +110,29 @@
       </div>
     </div>
 
-    <!-- Status -->
-    <div class="card" style="margin-bottom: var(--space-4);">
+    <div class="card" style="margin-bottom:var(--space-4);">
+      <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-toggle-on" style="color:var(--color-accent);"></i>
+        <span>Status</span>
+      </div>
       <div class="card-body">
-        <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+        <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;">
           <input type="checkbox" id="is_active" name="is_active" value="1"
-                 style="width: 1rem; height: 1rem; accent-color: var(--color-accent);"
+                 style="width:1rem;height:1rem;accent-color:var(--color-accent);"
                  {{ 'checked' if not sla or sla.is_active else '' }}>
-          <span style="font-weight: var(--font-weight-medium);">
-            Active — available for assignment to contracts
-          </span>
+          <span style="font-weight:500;">Active — available for assignment to contracts</span>
         </label>
       </div>
     </div>
 
-    <!-- Actions -->
-    <div style="display: flex; gap: var(--space-2); justify-content: flex-end; padding: var(--space-4) 0;">
-      <a href="{{ url_for('sla.sla_list') }}" class="btn btn-ghost">Cancel</a>
-      <button type="submit" class="btn btn-accent">
+    <div style="display:flex;gap:var(--space-2);justify-content:flex-end;padding:var(--space-4) 0 0;">
+      <a href="{{ url_for('sla.sla_list') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-arrow-left"></i> Cancel</a>
+      <button type="submit" class="btn btn-accent" style="font-size:var(--font-size-sm);">
         <i class="bi bi-check-circle"></i>
         {{ 'Update SLA' if action == 'edit' else 'Create SLA' }}
       </button>
     </div>
   </form>
-
 </div>
 {% endblock %}
 

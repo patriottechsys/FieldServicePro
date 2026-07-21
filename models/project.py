@@ -1,6 +1,6 @@
 """Project model — top-level container for complex commercial work."""
 import enum
-from datetime import datetime, date
+from datetime import timezone, datetime, date
 from sqlalchemy import (
     Column, Integer, String, Text, Date, DateTime, Float,
     ForeignKey, Enum as SAEnum
@@ -138,7 +138,7 @@ class Project(Base):
     @staticmethod
     def generate_project_number(db):
         """Generate next project number: PRJ-YYYY-XXXX."""
-        year = datetime.utcnow().year
+        year = datetime.now(timezone.utc).year
         prefix = f"PRJ-{year}-"
         last = db.query(Project).filter(
             Project.project_number.like(f"{prefix}%")

@@ -104,7 +104,7 @@
         <td style="padding:var(--space-2) var(--space-3);">{{ "{:,}".format(ml.end_odometer) }}</td>
         <td style="padding:var(--space-2) var(--space-3);text-align:right;font-weight:700;">{{ "{:,}".format(ml.miles_driven) }}</td>
         <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-xs);">{{ ml.purpose_label }}</td>
-        <td style="padding:var(--space-2) var(--space-3);">{% if ml.job %}<a href="{{ url_for('job_detail', job_id=ml.job_id) }}" style="font-size:var(--font-size-xs);">{{ ml.job.job_number }}</a>{% else %}--{% endif %}</td>
+        <td style="padding:var(--space-2) var(--space-3);">{% if ml.job %}<a href="{{ url_for('jobs_bp.job_detail', job_id=ml.job_id) }}" style="font-size:var(--font-size-xs);">{{ ml.job.job_number }}</a>{% else %}--{% endif %}</td>
         <td>{% if user.role in ('admin','owner') %}<form method="POST" action="{{ url_for('vehicles.delete_mileage', log_id=ml.id) }}" onsubmit="return confirm('Delete?');"><button type="submit" class="btn btn-ghost" style="font-size:var(--font-size-xs);color:var(--color-danger);padding:0 4px;"><i class="bi bi-trash"></i></button></form>{% endif %}</td>
     </tr>
     {% else %}
@@ -217,7 +217,7 @@
     <tbody>
     {% for job in recent_jobs %}
     <tr style="border-bottom:1px solid var(--color-border);">
-        <td style="padding:var(--space-2) var(--space-3);"><a href="{{ url_for('job_detail', job_id=job.id) }}" style="color:var(--color-accent);text-decoration:none;font-weight:600;">{{ job.job_number }}</a></td>
+        <td style="padding:var(--space-2) var(--space-3);"><a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" style="color:var(--color-accent);text-decoration:none;font-weight:600;">{{ job.job_number }}</a></td>
         <td style="padding:var(--space-2) var(--space-3);">{{ job.title[:50] }}</td>
         <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);">{{ job.scheduled_date.strftime('%m/%d/%y') if job.scheduled_date else '--' }}</td>
         <td style="padding:var(--space-2) var(--space-3);"><span style="font-size:var(--font-size-xs);padding:2px 8px;border-radius:var(--radius-sm);background:var(--color-surface-raised);">{{ job.status }}</span></td>

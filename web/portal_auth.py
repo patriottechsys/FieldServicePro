@@ -5,7 +5,7 @@ Uses Flask session with 'portal_*' keys, separate from Flask-Login (internal use
 import time
 from collections import defaultdict
 from functools import wraps
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 
 from flask import (
     Blueprint, render_template, redirect, url_for, flash, request,
@@ -59,13 +59,13 @@ def get_current_portal_user():
             try:
                 last_dt = datetime.fromisoformat(last_activity)
             except (ValueError, TypeError):
-                last_dt = datetime.utcnow()
-            if datetime.utcnow() - last_dt > timeout:
+                last_dt = datetime.now(timezone.utc)
+            if datetime.now(timezone.utc) - last_dt > timeout:
                 clear_portal_session()
                 g._portal_user = None
                 return None
 
-        session['portal_last_activity'] = datetime.utcnow().isoformat()
+        session['portal_last_activity'] = datetime.now(timezone.utc).isoformat()
         g._portal_user = user
         return user
     finally:
@@ -77,7 +77,7 @@ def set_portal_session(user):
     session['portal_user_id'] = user.id
     session['portal_client_id'] = user.client_id
     session['portal_user_role'] = user.role
-    session['portal_last_activity'] = datetime.utcnow().isoformat()
+    session['portal_last_activity'] = datetime.now(timezone.utc).isoformat()
     session.permanent = True
 
 
@@ -209,7 +209,7 @@ def portal_login():
                 return render_template('portal/auth/login.html')
 
             if user.is_locked:
-                remaining = (user.locked_until - datetime.utcnow()).seconds // 60 + 1
+                remaining = (user.locked_until - datetime.now(timezone.utc)).seconds // 60 + 1
                 flash(f'Account locked due to too many failed attempts. Try again in {remaining} minutes.', 'danger')
                 return render_template('portal/auth/login.html')
 

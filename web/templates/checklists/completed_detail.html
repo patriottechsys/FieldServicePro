@@ -21,7 +21,7 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-3);">
         <div>
           <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);display:block;">Job</span>
-          <a href="{{ url_for('job_detail', job_id=completed.job_id) }}" style="font-weight:500;">#{{ completed.job_id }}</a>
+          <a href="{{ url_for('jobs_bp.job_detail', job_id=completed.job_id) }}" style="font-weight:500;">#{{ completed.job_id }}</a>
         </div>
         <div>
           <span style="font-size:var(--font-size-xs);color:var(--color-text-muted);display:block;">Completed By</span>

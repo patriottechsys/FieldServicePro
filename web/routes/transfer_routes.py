@@ -1,5 +1,5 @@
 """Stock transfer workflow routes."""
-from datetime import datetime
+from datetime import timezone, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import desc
@@ -168,7 +168,7 @@ def approve_transfer_route(transfer_id):
         else:
             transfer.status = 'approved'
             transfer.approved_by = current_user.id
-            transfer.approved_at = datetime.utcnow()
+            transfer.approved_at = datetime.now(timezone.utc)
             db.commit()
             flash('Transfer approved.', 'success')
     finally:
@@ -276,6 +276,10 @@ def cancel_transfer_route(transfer_id):
 def api_transfer_stock(location_id):
     db = get_session()
     try:
+        from models.inventory import InventoryLocation
+        loc = db.query(InventoryLocation).filter_by(id=location_id, organization_id=current_user.organization_id).first()
+        if not loc:
+            return jsonify([]), 404
         stocks = db.query(InventoryStock).filter_by(
             location_id=location_id
         ).join(Part).filter(

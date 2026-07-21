@@ -1,6 +1,6 @@
 """Communication Activity Report."""
 import csv, io
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from flask import Blueprint, render_template, request, Response
 from flask_login import login_required, current_user
 from sqlalchemy import func, desc
@@ -35,11 +35,11 @@ def comm_report():
         df = request.args.get('date_from', '')
         dt = request.args.get('date_to', '')
         try:
-            date_from = datetime.strptime(df, '%Y-%m-%d') if df else datetime.utcnow() - timedelta(days=30)
-            date_to = datetime.strptime(dt + ' 23:59:59', '%Y-%m-%d %H:%M:%S') if dt else datetime.utcnow()
+            date_from = datetime.strptime(df, '%Y-%m-%d') if df else datetime.now(timezone.utc) - timedelta(days=30)
+            date_to = datetime.strptime(dt + ' 23:59:59', '%Y-%m-%d %H:%M:%S') if dt else datetime.now(timezone.utc)
         except ValueError:
-            date_from = datetime.utcnow() - timedelta(days=30)
-            date_to = datetime.utcnow()
+            date_from = datetime.now(timezone.utc) - timedelta(days=30)
+            date_to = datetime.now(timezone.utc)
 
         base = db.query(CommunicationLog).filter(
             CommunicationLog.communication_date.between(date_from, date_to)

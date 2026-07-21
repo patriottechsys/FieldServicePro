@@ -13,7 +13,7 @@
     {% endif %}
   </div>
   <div>
-    <a href="{{ url_for('jobs_page') }}" class="btn btn-accent" title="Select a job to create a Change Order">
+    <a href="{{ url_for('jobs_bp.jobs_page') }}" class="btn btn-accent" title="Select a job to create a Change Order">
       <i class="bi bi-plus-lg"></i> New Change Order
     </a>
   </div>
@@ -81,7 +81,7 @@
       {% for co in change_orders %}
       <tr {% if co.awaiting_approval %}style="background:rgba(245,158,11,0.04);"{% endif %}>
         <td><a href="{{ url_for('change_orders.co_detail', job_id=co.job_id, co_id=co.id) }}" style="font-weight:var(--font-weight-semibold);">{{ co.change_order_number }}</a></td>
-        <td><a href="{{ url_for('job_detail', job_id=co.job_id) }}">{{ co.job.job_number }}</a></td>
+        <td><a href="{{ url_for('jobs_bp.job_detail', job_id=co.job_id) }}">{{ co.job.job_number }}</a></td>
         <td>{{ co.job.client.display_name if co.job.client else '---' }}</td>
         <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ co.title }}">{{ co.title }}</td>
         <td style="text-align:center;">

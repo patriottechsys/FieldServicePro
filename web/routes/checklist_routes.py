@@ -1,6 +1,6 @@
 """Routes for safety checklist management."""
 import re
-from datetime import datetime
+from datetime import timezone, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_login import login_required, current_user
 from models.database import get_session
@@ -380,7 +380,7 @@ def review_checklist(completed_id):
 
         completed.supervisor_reviewed = True
         completed.supervisor_id = current_user.id
-        completed.supervisor_reviewed_at = datetime.utcnow()
+        completed.supervisor_reviewed_at = datetime.now(timezone.utc)
         db.commit()
         flash('Checklist marked as reviewed.', 'success')
     finally:

@@ -85,17 +85,19 @@ def schedule_assign():
     if current_user.role not in ('owner', 'admin', 'dispatcher'):
         return jsonify({'success': False, 'error': 'Permission denied'}), 403
 
+    from web.utils.validation import validate, ScheduleCreateSchema
     data = request.get_json()
     if not data:
         return jsonify({'success': False, 'error': 'No data'}), 400
 
-    job_id = data.get('job_id')
-    tech_id = data.get('technician_id')
-    start_time = data.get('start_time')
-    end_time = data.get('end_time')
+    obj, err = validate(ScheduleCreateSchema, data)
+    if err:
+        return jsonify(err), 400
 
-    if not job_id or not start_time:
-        return jsonify({'success': False, 'error': 'job_id and start_time required'}), 400
+    job_id = obj.job_id
+    tech_id = obj.technician_id
+    start_time = obj.start_time
+    end_time = obj.end_time
 
     db = get_session()
     try:
@@ -168,13 +170,15 @@ def schedule_reschedule():
     if current_user.role not in ('owner', 'admin', 'dispatcher'):
         return jsonify({'success': False, 'error': 'Permission denied'}), 403
 
+    from web.utils.validation import validate, ScheduleRescheduleSchema
     data = request.get_json()
-    job_id = data.get('job_id')
-    new_start = data.get('new_start')
-    new_end = data.get('new_end')
+    obj, err = validate(ScheduleRescheduleSchema, data or {})
+    if err:
+        return jsonify(err), 400
 
-    if not job_id or not new_start:
-        return jsonify({'success': False, 'error': 'job_id and new_start required'}), 400
+    job_id = obj.job_id
+    new_start = obj.new_start
+    new_end = obj.new_end
 
     db = get_session()
     try:

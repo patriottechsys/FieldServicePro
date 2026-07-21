@@ -1,7 +1,7 @@
 """
 Phase status transition logic, job status derivation, and inspection workflow.
 """
-from datetime import datetime, date
+from datetime import timezone, datetime, date
 
 # Valid status transitions
 ALLOWED_TRANSITIONS = {
@@ -39,7 +39,7 @@ def transition_phase_status(phase, new_status, actor_note=None):
     old_status = phase.status
     phase.status = new_status
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     today = date.today()
 
     if new_status == 'in_progress' and not phase.actual_start_date:
@@ -82,9 +82,9 @@ def record_inspection(phase, passed, inspector_notes=None, inspection_date=None)
         return False, "This phase does not require inspection."
 
     phase.inspection_status = 'passed' if passed else 'failed'
-    phase.inspection_date = inspection_date or datetime.utcnow()
+    phase.inspection_date = inspection_date or datetime.now(timezone.utc)
     phase.inspection_notes = inspector_notes
-    phase.updated_at = datetime.utcnow()
+    phase.updated_at = datetime.now(timezone.utc)
 
     if not passed and phase.status == 'completed':
         phase.status = 'in_progress'

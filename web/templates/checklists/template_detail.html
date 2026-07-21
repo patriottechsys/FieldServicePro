@@ -114,7 +114,7 @@
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
               <div style="font-size:var(--font-size-sm);font-weight:500;">
-                <a href="{{ url_for('job_detail', job_id=c.job_id) }}" style="color:var(--color-accent);">Job #{{ c.job_id }}</a>
+                <a href="{{ url_for('jobs_bp.job_detail', job_id=c.job_id) }}" style="color:var(--color-accent);">Job #{{ c.job_id }}</a>
               </div>
               <div style="font-size:var(--font-size-xs);color:var(--color-text-muted);">
                 {{ c.completer.full_name if c.completer else 'Unknown' }} &middot;

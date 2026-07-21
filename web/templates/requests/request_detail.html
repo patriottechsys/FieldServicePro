@@ -32,7 +32,7 @@
   <span class="badge" style="background:var(--color-{{ sr.status_color }});color:#fff;font-size:var(--font-size-sm);padding:var(--space-1) var(--space-3);">{{ sr.status_display }}</span>
   <span class="badge" style="background:var(--color-{{ sr.priority_color }});color:#fff;font-size:var(--font-size-sm);padding:var(--space-1) var(--space-3);">{{ sr.priority_display }} Priority</span>
   {% if sr.converted_job_id %}
-  <a href="{{ url_for('job_detail', job_id=sr.converted_job_id) }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">
+  <a href="{{ url_for('jobs_bp.job_detail', job_id=sr.converted_job_id) }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">
     <i class="bi bi-briefcase"></i> View Job #{{ sr.converted_job.job_number if sr.converted_job else sr.converted_job_id }}
   </a>
   {% endif %}
@@ -199,7 +199,7 @@
       <div class="card-body" style="text-align:center;">
         <i class="bi bi-check-circle" style="color:var(--color-success);font-size:1.5rem;"></i>
         <div style="font-weight:600;margin:var(--space-1) 0;">Converted to Job</div>
-        <a href="{{ url_for('job_detail', job_id=sr.converted_job_id) }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">
+        <a href="{{ url_for('jobs_bp.job_detail', job_id=sr.converted_job_id) }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);">
           View {{ sr.converted_job.job_number }}
         </a>
       </div>

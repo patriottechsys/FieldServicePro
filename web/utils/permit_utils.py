@@ -1,6 +1,6 @@
 """Permit management utilities."""
 
-from datetime import datetime, date
+from datetime import timezone, datetime, date
 from models.permit import Permit
 
 
@@ -47,7 +47,7 @@ def update_permit(db, permit, form_data):
     permit.notes = form_data.get('notes', '').strip() or permit.notes
     if form_data.get('phase_id'):
         permit.phase_id = int(form_data['phase_id'])
-    permit.updated_at = datetime.utcnow()
+    permit.updated_at = datetime.now(timezone.utc)
     return permit
 
 
@@ -62,7 +62,7 @@ def get_blocking_permits(db, job_id):
 def get_expiring_permits(db, days=30):
     """Get permits expiring within N days."""
     cutoff = date.today()
-    from datetime import timedelta
+    from datetime import timezone, timedelta
     end = cutoff + timedelta(days=days)
     return db.query(Permit).filter(
         Permit.expiry_date.isnot(None),

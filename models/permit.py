@@ -1,6 +1,6 @@
 """Permit tracking model."""
 import json
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from sqlalchemy import Column, Integer, String, Text, Float, Date, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from .database import Base
@@ -109,7 +109,7 @@ class Permit(Base):
             'result': result,
             'inspector': inspector or self.inspector_name,
             'notes': notes,
-            'recorded_at': datetime.utcnow().isoformat(),
+            'recorded_at': datetime.now(timezone.utc).isoformat(),
         })
         self.inspection_dates = json.dumps(history)
         if result == 'passed':

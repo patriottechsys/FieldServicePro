@@ -19,7 +19,7 @@
                 </div>
                 <h4 style="margin:0;color:var(--color-text-secondary);">{{ project.title }}</h4>
                 <div style="display:flex;gap:var(--space-3);margin-top:var(--space-2);font-size:var(--font-size-sm);flex-wrap:wrap;">
-                    {% if project.client %}<span><i class="bi bi-building" style="color:var(--color-text-muted);"></i> <a href="{{ url_for('client_detail', client_id=project.client_id) }}" style="color:var(--color-accent);text-decoration:none;">{{ project.client.display_name }}</a></span>{% endif %}
+                    {% if project.client %}<span><i class="bi bi-building" style="color:var(--color-text-muted);"></i> <a href="{{ url_for('clients_bp.client_detail', client_id=project.client_id) }}" style="color:var(--color-accent);text-decoration:none;">{{ project.client.display_name }}</a></span>{% endif %}
                     {% if project.division %}<span style="display:inline-block;font-size:0.55rem;font-weight:600;padding:1px 5px;border-radius:999px;background:{{ project.division.color or '#666' }};color:#fff;">{{ project.division.name }}</span>{% endif %}
                     {% if project.project_manager %}<span><i class="bi bi-person" style="color:var(--color-text-muted);"></i> {{ project.project_manager.full_name }}</span>{% endif %}
                     {% if project.estimated_start_date %}<span><i class="bi bi-calendar" style="color:var(--color-text-muted);"></i> {{ project.estimated_start_date.strftime('%b %d') }} — {{ project.estimated_end_date.strftime('%b %d, %Y') if project.estimated_end_date else 'TBD' }}</span>{% endif %}

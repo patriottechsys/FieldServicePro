@@ -1,0 +1,92 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './web/templates/**/*.html',
+    './web/static/js/**/*.js',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          50:  '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
+        },
+        teal: {
+          50:  '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#14b8a6',
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
+        },
+        brand: {
+          primary:    '#1e293b',
+          'primary-light': '#334155',
+          'primary-dark':  '#0f172a',
+          accent:     '#0d9488',
+          'accent-light': '#14b8a6',
+          'accent-dark':  '#0f766e',
+          warning:    '#f59e0b',
+          danger:     '#ef4444',
+          success:    '#10b981',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+      },
+      fontSize: {
+        'xs':   '0.75rem',
+        'sm':   '0.875rem',
+        'base': '1rem',
+        'md':   '1.125rem',
+        'lg':   '1.25rem',
+        'xl':   '1.5rem',
+        '2xl':  '2rem',
+      },
+      spacing: {
+        'sidebar':       '260px',
+        'sidebar-collapsed': '64px',
+      },
+      borderRadius: {
+        'sm':   '0.25rem',
+        'base': '0.375rem',
+        'md':   '0.5rem',
+        'lg':   '0.75rem',
+        'xl':   '1rem',
+      },
+      boxShadow: {
+        'xs':  '0 1px 2px rgba(0,0,0,0.05)',
+        'sm':  '0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)',
+        'md':  '0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05)',
+        'lg':  '0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04)',
+        'xl':  '0 20px 25px rgba(0,0,0,0.09), 0 8px 10px rgba(0,0,0,0.04)',
+      },
+      zIndex: {
+        'sidebar':  '100',
+        'topbar':   '90',
+        'dropdown': '200',
+        'modal':    '300',
+        'toast':    '400',
+      },
+      transitionDuration: {
+        'fast': '150ms',
+        'base': '200ms',
+        'slow': '300ms',
+      },
+    },
+  },
+  plugins: [],
+}

@@ -139,8 +139,11 @@ class FeedbackSurvey(Base):
     @property
     def is_expired(self):
         if self.expires_at:
-            now = datetime.utcnow()
-            return now > self.expires_at
+            now = datetime.now(timezone.utc)
+            expires = self.expires_at
+            if expires.tzinfo is None:
+                expires = expires.replace(tzinfo=timezone.utc)
+            return now > expires
         return False
 
     @property

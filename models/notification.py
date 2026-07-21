@@ -1,5 +1,5 @@
 """Notification system models."""
-from datetime import datetime
+from datetime import timezone, datetime
 from sqlalchemy import (
     Column, Integer, String, Text, Boolean, DateTime,
     ForeignKey, Index, JSON
@@ -79,16 +79,16 @@ class Notification(Base):
     def mark_read(self):
         if not self.is_read:
             self.is_read = True
-            self.read_at = datetime.utcnow()
+            self.read_at = datetime.now(timezone.utc)
 
     def dismiss(self):
         self.is_dismissed = True
-        self.dismissed_at = datetime.utcnow()
+        self.dismissed_at = datetime.now(timezone.utc)
         self.mark_read()
 
     @property
     def time_ago(self):
-        delta = datetime.utcnow() - self.created_at
+        delta = datetime.now(timezone.utc) - self.created_at
         secs = int(delta.total_seconds())
         if secs < 60: return 'just now'
         if secs < 3600: m = secs // 60; return f'{m}m ago'

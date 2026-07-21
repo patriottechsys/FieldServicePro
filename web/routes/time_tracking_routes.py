@@ -1,7 +1,7 @@
 """Time Tracking routes: dashboard, entries, approvals, my-time, export, reports, API."""
 import csv
 import io
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
     flash, jsonify, Response, abort
@@ -326,7 +326,7 @@ def tt_export():
                     float(e.duration_hours or 0), float(e.hourly_rate or 0),
                     e.entry_type, float(e.labor_cost or 0), e.description or '',
                 ])
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             for e in entries:
                 e.status = 'exported'
                 e.exported_at = now
@@ -371,19 +371,28 @@ def tt_export():
 @time_tracking_bp.route('/api/clock-in', methods=['POST'])
 @login_required
 def api_clock_in():
+    from web.utils.validation import validate, ClockInSchema
     data = request.get_json()
     db = get_session()
     try:
         tech = _get_tech_for_user(db)
-        tech_id = data.get('technician_id') if _can_admin() else (tech.id if tech else None)
+        if not tech and current_user.role != 'technician':
+            pass  # admin: require explicit technician_id
+        data_for_val = {**data}
+        if not data_for_val.get('technician_id') and tech:
+            data_for_val['technician_id'] = tech.id
+        obj, err = validate(ClockInSchema, data_for_val)
+        if err:
+            return jsonify(err), 400
+        tech_id = obj.technician_id
         if not tech_id:
             return jsonify({'error': 'Technician ID required.'}), 400
-        if not data.get('job_id'):
+        if not obj.job_id:
             return jsonify({'error': 'Job ID required.'}), 400
     finally:
         db.close()
 
-    clock, err = clock_in(tech_id, data['job_id'], phase_id=data.get('phase_id'), notes=data.get('notes'))
+    clock, err = clock_in(tech_id, obj.job_id, phase_id=obj.phase_id, notes=obj.notes)
     if err:
         return jsonify({'error': err}), 400
     return jsonify({'success': True, 'clock_id': clock.id if clock else None})
@@ -392,17 +401,24 @@ def api_clock_in():
 @time_tracking_bp.route('/api/clock-out', methods=['POST'])
 @login_required
 def api_clock_out():
+    from web.utils.validation import validate, ClockOutSchema
     data = request.get_json()
     db = get_session()
     try:
         tech = _get_tech_for_user(db)
-        tech_id = data.get('technician_id') if _can_admin() else (tech.id if tech else None)
+        data_for_val = {**data}
+        if not data_for_val.get('technician_id') and tech:
+            data_for_val['technician_id'] = tech.id
+        obj, err = validate(ClockOutSchema, data_for_val)
+        if err:
+            return jsonify(err), 400
+        tech_id = obj.technician_id
         if not tech_id:
             return jsonify({'error': 'Technician ID required.'}), 400
     finally:
         db.close()
 
-    entry, err = clock_out(tech_id, description=data.get('description'), entry_type=data.get('entry_type', 'regular'))
+    entry, err = clock_out(tech_id, description=obj.description, entry_type=obj.entry_type)
     if err:
         return jsonify({'error': err}), 400
     return jsonify({'success': True, 'entry_id': entry.id if entry else None,
@@ -413,11 +429,12 @@ def api_clock_out():
 @login_required
 @role_required('owner', 'admin')
 def api_approve():
+    from web.utils.validation import validate, ApproveEntriesSchema
     data = request.get_json()
-    ids = data.get('entry_ids', [])
-    if not ids:
-        return jsonify({'error': 'No entries specified.'}), 400
-    count = approve_entries(ids, current_user.id)
+    obj, err = validate(ApproveEntriesSchema, data or {})
+    if err:
+        return jsonify(err), 400
+    count = approve_entries(obj.entry_ids, current_user.id)
     return jsonify({'success': True, 'approved_count': count})
 
 
@@ -425,12 +442,12 @@ def api_approve():
 @login_required
 @role_required('owner', 'admin')
 def api_reject():
+    from web.utils.validation import validate, RejectEntriesSchema
     data = request.get_json()
-    ids = data.get('entry_ids', [])
-    reason = data.get('reason', '')
-    if not ids or not reason:
-        return jsonify({'error': 'Entry IDs and reason required.'}), 400
-    count = reject_entries(ids, current_user.id, reason)
+    obj, err = validate(RejectEntriesSchema, data or {})
+    if err:
+        return jsonify(err), 400
+    count = reject_entries(obj.entry_ids, current_user.id, obj.reason)
     return jsonify({'success': True, 'rejected_count': count})
 
 

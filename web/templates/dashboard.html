@@ -72,7 +72,7 @@ a.metric-card--link:hover .metric-card__label {
 <div class="dash-kpi-row">
 
   <!-- Active Jobs -->
-  <a href="{{ url_for('jobs_page') }}?status=in_progress" class="metric-card metric-card--link">
+  <a href="{{ url_for('jobs_bp.jobs_page') }}?status=in_progress" class="metric-card metric-card--link">
     <div class="metric-card__icon metric-card__icon--accent">
       <i class="bi bi-briefcase-fill"></i>
     </div>
@@ -85,7 +85,7 @@ a.metric-card--link:hover .metric-card__label {
   </a>
 
   <!-- Revenue -->
-  <a href="{{ url_for('invoices_page') }}?status=paid" class="metric-card metric-card--link">
+  <a href="{{ url_for('invoices_bp.invoices_page') }}?status=paid" class="metric-card metric-card--link">
     <div class="metric-card__icon metric-card__icon--success">
       <i class="bi bi-currency-dollar"></i>
     </div>
@@ -98,7 +98,7 @@ a.metric-card--link:hover .metric-card__label {
   </a>
 
   <!-- Overdue Invoices -->
-  <a href="{{ url_for('invoices_page') }}?status=overdue" class="metric-card metric-card--link{% if invoices_past_due and invoices_past_due > 0 %} metric-card--alert{% endif %}">
+  <a href="{{ url_for('invoices_bp.invoices_page') }}?status=overdue" class="metric-card metric-card--link{% if invoices_past_due and invoices_past_due > 0 %} metric-card--alert{% endif %}">
     <div class="metric-card__icon metric-card__icon--danger">
       <i class="bi bi-exclamation-triangle-fill"></i>
     </div>
@@ -161,7 +161,7 @@ a.metric-card--link:hover .metric-card__label {
           {% endif %}
         </a>
 
-        <a href="{{ url_for('quotes_page') }}?status=sent" class="dash-stat-row dash-stat-row--blue">
+        <a href="{{ url_for('quotes_bp.quotes_page') }}?status=sent" class="dash-stat-row dash-stat-row--blue">
           <div class="dash-stat-bar"></div>
           <div class="dash-stat-content">
             <span class="dash-stat-label">Open Quotes</span>
@@ -170,7 +170,7 @@ a.metric-card--link:hover .metric-card__label {
           <span class="dash-stat-money">${{ "{:,.0f}".format(quotes_total_value) }}</span>
         </a>
 
-        <a href="{{ url_for('jobs_page') }}?status=completed" class="dash-stat-row dash-stat-row--accent">
+        <a href="{{ url_for('jobs_bp.jobs_page') }}?status=completed" class="dash-stat-row dash-stat-row--accent">
           <div class="dash-stat-bar"></div>
           <div class="dash-stat-content">
             <span class="dash-stat-label">Requires Invoicing</span>
@@ -178,7 +178,7 @@ a.metric-card--link:hover .metric-card__label {
           </div>
         </a>
 
-        <a href="{{ url_for('jobs_page') }}?status=on_hold" class="dash-stat-row dash-stat-row--amber">
+        <a href="{{ url_for('jobs_bp.jobs_page') }}?status=on_hold" class="dash-stat-row dash-stat-row--amber">
           <div class="dash-stat-bar"></div>
           <div class="dash-stat-content">
             <span class="dash-stat-label">Action Required</span>
@@ -189,7 +189,7 @@ a.metric-card--link:hover .metric-card__label {
           {% endif %}
         </a>
 
-        <a href="{{ url_for('invoices_page') }}?status=sent" class="dash-stat-row dash-stat-row--green">
+        <a href="{{ url_for('invoices_bp.invoices_page') }}?status=sent" class="dash-stat-row dash-stat-row--green">
           <div class="dash-stat-bar"></div>
           <div class="dash-stat-content">
             <span class="dash-stat-label">Awaiting Payment</span>
@@ -199,7 +199,7 @@ a.metric-card--link:hover .metric-card__label {
         </a>
 
         {% if invoices_past_due > 0 %}
-        <a href="{{ url_for('invoices_page') }}?status=overdue" class="dash-stat-row dash-stat-row--red">
+        <a href="{{ url_for('invoices_bp.invoices_page') }}?status=overdue" class="dash-stat-row dash-stat-row--red">
           <div class="dash-stat-bar"></div>
           <div class="dash-stat-content">
             <span class="dash-stat-label">Past Due</span>
@@ -239,7 +239,7 @@ a.metric-card--link:hover .metric-card__label {
 
       <div class="dash-appt-list">
         {% for job in todays_jobs %}
-        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="dash-appt-item">
+        <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" class="dash-appt-item">
           <div class="dash-appt-time">
             {% if job.scheduled_date and 'T' in (job.scheduled_date or '') %}
               {{ job.scheduled_date.split('T')[1][:5] }}
@@ -279,13 +279,13 @@ a.metric-card--link:hover .metric-card__label {
   <div class="card">
     <div class="card-header">
       <h2 class="card-title"><i class="bi bi-activity" style="margin-right:6px; color:var(--color-accent);"></i> Recent Activity</h2>
-      <a href="{{ url_for('jobs_page') }}" class="btn btn-sm btn-ghost">View All Jobs</a>
+      <a href="{{ url_for('jobs_bp.jobs_page') }}" class="btn btn-sm btn-ghost">View All Jobs</a>
     </div>
     <div class="card-body" style="padding:0;display:flex;flex-direction:column;flex:1;">
       {% if recent_jobs %}
       <div class="dash-activity-feed" style="flex:1;">
         {% for job in recent_jobs %}
-        <a href="{{ url_for('job_detail', job_id=job.id) }}" class="dash-activity-item">
+        <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" class="dash-activity-item">
           <div class="dash-activity-icon
             {%- if job.status == 'completed' %} dash-activity-icon--success
             {%- elif job.status == 'in_progress' %} dash-activity-icon--accent
@@ -339,15 +339,15 @@ a.metric-card--link:hover .metric-card__label {
             <i class="bi bi-inbox"></i>
             <span>New Request</span>
           </a>
-          <a href="{{ url_for('quote_new_page') }}" class="dash-quick-btn dash-quick-btn--blue">
+          <a href="{{ url_for('quotes_bp.quote_new_page') }}" class="dash-quick-btn dash-quick-btn--blue">
             <i class="bi bi-file-earmark-text"></i>
             <span>New Quote</span>
           </a>
-          <a href="{{ url_for('invoice_new') }}" class="dash-quick-btn dash-quick-btn--green">
+          <a href="{{ url_for('invoices_bp.invoice_new') }}" class="dash-quick-btn dash-quick-btn--green">
             <i class="bi bi-receipt"></i>
             <span>New Invoice</span>
           </a>
-          <a href="{{ url_for('client_new_page') }}" class="dash-quick-btn dash-quick-btn--purple">
+          <a href="{{ url_for('clients_bp.client_new_page') }}" class="dash-quick-btn dash-quick-btn--purple">
             <i class="bi bi-person-plus"></i>
             <span>New Client</span>
           </a>
@@ -359,7 +359,7 @@ a.metric-card--link:hover .metric-card__label {
     <div class="card">
       <div class="card-header">
         <h2 class="card-title">Receivables</h2>
-        <a href="{{ url_for('invoices_page') }}" class="perf-chevron"><i class="bi bi-chevron-right"></i></a>
+        <a href="{{ url_for('invoices_bp.invoices_page') }}" class="perf-chevron"><i class="bi bi-chevron-right"></i></a>
       </div>
       <div class="card-body">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--space-3);">

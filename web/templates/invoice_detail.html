@@ -6,7 +6,7 @@
 <!-- Header -->
 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
     <div>
-        <a href="{{ url_for('invoices_page') }}" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">
+        <a href="{{ url_for('invoices_bp.invoices_page') }}" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">
             <i class="bi bi-arrow-left"></i> Invoices
         </a>
     </div>
@@ -168,7 +168,8 @@
     </div>
     <div class="card-body">
         <textarea placeholder="Note details..." style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; min-height: 60px; resize: vertical; margin-bottom: 0.5rem;"></textarea>
-        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Drag your files here or <a href="#" style="color: var(--primary);">Select a File</a></p>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Drag your files here or <a href="#" onclick="document.getElementById('note-file-input').click();return false;" style="color: var(--primary);">Select a File</a></p>
+        <input type="file" id="note-file-input" style="display:none;" multiple>
     </div>
 </div>
 {% endblock %}

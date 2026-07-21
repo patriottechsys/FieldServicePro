@@ -1,5 +1,5 @@
 """Notification routes: center, API, preferences, client templates."""
-from datetime import datetime
+from datetime import timezone, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import desc
@@ -369,8 +369,8 @@ def notification_log():
         if date_from:
             query = query.filter(NotificationLog.created_at >= datetime.strptime(date_from, '%Y-%m-%d'))
         if date_to:
-            from datetime import timedelta
-            query = query.filter(NotificationLog.created_at < datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1))
+            from datetime import timedelta as _td
+            query = query.filter(NotificationLog.created_at < datetime.strptime(date_to, '%Y-%m-%d') + _td(days=1))
         if search:
             query = query.filter(
                 NotificationLog.recipient_email.ilike(f'%{search}%') |
@@ -381,7 +381,7 @@ def notification_log():
         logs = query.order_by(desc(NotificationLog.created_at)).offset((page - 1) * per_page).limit(per_page).all()
 
         from sqlalchemy import func
-        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0)
+        today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0)
         stats = {
             'total_today': db.query(NotificationLog).filter(NotificationLog.created_at >= today_start).count(),
             'total_failed': db.query(NotificationLog).filter(NotificationLog.status == 'failed').count(),

@@ -1,5 +1,5 @@
 """RFI (Request for Information) routes — list, detail, create, edit, respond."""
-from datetime import date, datetime
+from datetime import timezone, date, datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 
@@ -240,7 +240,7 @@ def rfi_respond(rfi_id):
             rfi.response = request.form['response'].strip()
             rfi.responded_by_id = current_user.id
             rfi.responded_by_external = request.form.get('responded_by_external', '').strip() or None
-            rfi.response_date = datetime.utcnow()
+            rfi.response_date = datetime.now(timezone.utc)
             rfi.status = 'answered'
             db.commit()
 

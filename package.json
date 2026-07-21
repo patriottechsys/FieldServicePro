@@ -1,0 +1,14 @@
+{
+  "name": "fieldservicepro",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i web/static/css/tailwind-input.css -o web/static/css/tailwind.css --watch",
+    "build": "npx @tailwindcss/cli -i web/static/css/tailwind-input.css -o web/static/css/tailwind.css --minify",
+    "test": "python -m pytest tests/ -v"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

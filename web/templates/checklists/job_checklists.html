@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom:var(--space-3);">
-  <a href="{{ url_for('job_detail', job_id=job.id) }}" style="color:var(--color-text-muted);text-decoration:none;font-size:var(--font-size-sm);">
+  <a href="{{ url_for('jobs_bp.job_detail', job_id=job.id) }}" style="color:var(--color-text-muted);text-decoration:none;font-size:var(--font-size-sm);">
     <i class="bi bi-arrow-left"></i> Back to Job
   </a>
 </div>

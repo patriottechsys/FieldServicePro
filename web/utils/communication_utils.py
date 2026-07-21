@@ -1,11 +1,11 @@
 """Utility functions for Communication Log module."""
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from sqlalchemy import func, or_
 from models.communication import CommunicationLog, CommunicationTemplate, DIRECTION_MAP
 
 
 def generate_log_number(db):
-    year = datetime.utcnow().year
+    year = datetime.now(timezone.utc).year
     prefix = f"COM-{year}-"
     last = db.query(CommunicationLog).filter(
         CommunicationLog.log_number.like(f"{prefix}%")

@@ -141,6 +141,7 @@ class TestPOBalance:
             assert po.status == 'exhausted'
 
             inv.status = 'void'
+            db.flush()
             recalculate_po_balance(db, po)
             assert po.status == 'active'
             assert po.amount_remaining == 10000.0

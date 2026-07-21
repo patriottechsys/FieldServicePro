@@ -11,7 +11,7 @@ Overtime rules (defaults):
 import csv
 import io
 from collections import defaultdict
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 
 from models.database import get_session
 from models.technician import Technician
@@ -228,7 +228,7 @@ def finalize_period(period, user_id):
     """Lock the period."""
     period.status = 'finalized'
     period.finalized_by = user_id
-    period.finalized_at = datetime.utcnow()
+    period.finalized_at = datetime.now(timezone.utc)
     period.refresh_totals()
     return period
 

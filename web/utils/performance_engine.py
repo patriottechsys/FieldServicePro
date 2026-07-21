@@ -4,7 +4,7 @@ Computes composite technician performance scores from weighted metrics
 across 7 dimensions. Stores results in TechPerformanceScore.
 Adapted to project's actual field names (organization_id, assigned_technician_id, etc.)
 """
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from sqlalchemy import func
 from models.tech_performance import (
     TechPerformanceScore, TechAchievement, ACHIEVEMENT_DEFINITIONS
@@ -271,7 +271,7 @@ def calculate_tech_scores_for_period(db, org_id, period_type, start, end, verbos
         s.total_callbacks = cb_count
         s.avg_customer_rating = avg_rat
         s.avg_job_margin = avg_margin
-        s.calculated_at = datetime.utcnow()
+        s.calculated_at = datetime.now(timezone.utc)
         s.period_end = end
         scores.append(s)
 

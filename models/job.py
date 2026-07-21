@@ -1,7 +1,7 @@
 """Job / Work Order model."""
 
 import builtins
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Text, Float
 from sqlalchemy.orm import relationship
 import enum
@@ -175,7 +175,7 @@ class Job(Base):
         """Response deadline within 80% consumed but not yet met."""
         if not self.sla_response_deadline or self.actual_response_time:
             return False
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if now >= self.sla_response_deadline:
             return False
         total = (self.sla_response_deadline - self.created_at).total_seconds()
@@ -188,13 +188,13 @@ class Job(Base):
             return False
         if self.actual_response_time:
             return self.actual_response_time > self.sla_response_deadline
-        return datetime.utcnow() > self.sla_response_deadline
+        return datetime.now(timezone.utc) > self.sla_response_deadline
 
     @builtins.property
     def sla_resolution_at_risk(self):
         if not self.sla_resolution_deadline or self.actual_resolution_time:
             return False
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if now >= self.sla_resolution_deadline:
             return False
         total = (self.sla_resolution_deadline - self.created_at).total_seconds()
@@ -207,7 +207,7 @@ class Job(Base):
             return False
         if self.actual_resolution_time:
             return self.actual_resolution_time > self.sla_resolution_deadline
-        return datetime.utcnow() > self.sla_resolution_deadline
+        return datetime.now(timezone.utc) > self.sla_resolution_deadline
 
     @builtins.property
     def sla_status(self):
@@ -272,9 +272,10 @@ class JobNote(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     content = Column(Text, nullable=False)
     note_type = Column(String(20), default='note')  # note, status_change, photo, internal
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
     job = relationship("Job", back_populates="notes")
+    author = relationship("User", foreign_keys=[user_id])
 
     def to_dict(self):
         return {
@@ -282,5 +283,10 @@ class JobNote(Base):
             'job_id': self.job_id,
             'content': self.content,
             'note_type': self.note_type,
-            'created_at': self.created_at.isoformat() if self.created_at else None
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'author_name': self.author.full_name if self.author else 'System',
+            'author_initials': (
+                (self.author.first_name[0] + (self.author.last_name[0] if self.author.last_name else ''))
+                if self.author and self.author.first_name else '?'
+            ).upper(),
         }

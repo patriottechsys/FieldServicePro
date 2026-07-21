@@ -165,7 +165,7 @@ def new_schedule():
         technicians = db.query(Technician).filter_by(is_active=True).order_by(Technician.first_name).all()
         divisions = db.query(Division).filter_by(organization_id=org_id, is_active=True).order_by(Division.sort_order).all()
         contracts = db.query(Contract).filter_by(organization_id=org_id, status='active').all()
-        checklists = db.query(ChecklistTemplate).filter_by(organization_id=org_id, is_active=True).all()
+        checklists = db.query(ChecklistTemplate).filter_by(is_active=True).all()
 
         return render_template('recurring/schedule_form.html',
             active_page='recurring', user=current_user, divisions=_get_divisions(),
@@ -232,7 +232,7 @@ def edit_schedule(schedule_id):
         technicians = db.query(Technician).filter_by(is_active=True).order_by(Technician.first_name).all()
         divisions = db.query(Division).filter_by(organization_id=org_id, is_active=True).order_by(Division.sort_order).all()
         contracts = db.query(Contract).filter_by(organization_id=org_id, status='active').all()
-        checklists = db.query(ChecklistTemplate).filter_by(organization_id=org_id, is_active=True).all()
+        checklists = db.query(ChecklistTemplate).filter_by(is_active=True).all()
 
         return render_template('recurring/schedule_form.html',
             active_page='recurring', user=current_user, divisions=_get_divisions(),

@@ -3,7 +3,7 @@ SLA detection and deadline calculation utilities.
 Called from job creation, job edit, and job status-change routes.
 """
 
-from datetime import datetime
+from datetime import timezone, datetime
 from models.contract import Contract, ContractStatus
 from models.sla import SLA, PriorityLevel
 
@@ -83,7 +83,7 @@ def apply_sla_to_job(job, contract, sla, created_at=None):
     job.contract_id = contract.id if contract else None
     job.sla_id      = sla.id
 
-    base_dt = created_at or job.created_at or datetime.utcnow()
+    base_dt = created_at or job.created_at or datetime.now(timezone.utc)
 
     job.sla_response_deadline = sla.calculate_deadline(
         base_dt, sla.response_time_hours
@@ -102,7 +102,7 @@ def record_response_time(job):
     Call when job moves to 'in_progress'.
     Sets actual_response_time and sla_response_met.
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     job.actual_response_time = now
     if job.sla_response_deadline:
         job.sla_response_met = now <= job.sla_response_deadline
@@ -115,7 +115,7 @@ def record_resolution_time(job):
     Call when job moves to 'completed'.
     Sets actual_resolution_time and sla_resolution_met.
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     job.actual_resolution_time = now
     if job.sla_resolution_deadline:
         job.sla_resolution_met = now <= job.sla_resolution_deadline
@@ -154,7 +154,7 @@ def get_sla_alert_jobs(db, limit=50):
     from models.job import Job
     from sqlalchemy import or_
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     jobs = (db.query(Job)
               .filter(Job.sla_id.isnot(None))

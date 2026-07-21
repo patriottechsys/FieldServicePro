@@ -57,7 +57,7 @@ def new_phase(job_id):
                 flash(f"Phase '{phase.title}' created.", 'success')
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return jsonify({'success': True, 'phase': phase.to_dict()})
-                return redirect(url_for('job_detail', job_id=job_id))
+                return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
             except Exception as e:
                 db.rollback()
                 flash(f'Error creating phase: {str(e)}', 'danger')
@@ -109,7 +109,7 @@ def edit_phase(job_id, phase_id):
                 flash(f"Phase '{phase.title}' updated.", 'success')
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return jsonify({'success': True, 'phase': phase.to_dict()})
-                return redirect(url_for('job_detail', job_id=job_id))
+                return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
             except Exception as e:
                 db.rollback()
                 flash(f'Error updating phase: {str(e)}', 'danger')
@@ -154,7 +154,7 @@ def delete_phase_route(job_id, phase_id):
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return jsonify({'success': True})
-        return redirect(url_for('job_detail', job_id=job_id))
+        return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
     except Exception as e:
         db.rollback()
         flash(f'Error deleting phase: {str(e)}', 'danger')
@@ -204,7 +204,7 @@ def convert_to_multiphase(job_id):
 
         if job.is_multi_phase:
             flash('Job is already multi-phase.', 'info')
-            return redirect(url_for('job_detail', job_id=job_id))
+            return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
 
         job.is_multi_phase = True
         if job.original_estimated_cost is None:
@@ -212,7 +212,7 @@ def convert_to_multiphase(job_id):
 
         db.commit()
         flash('Job converted to multi-phase. Add phases below.', 'success')
-        return redirect(url_for('job_detail', job_id=job_id))
+        return redirect(url_for('jobs_bp.job_detail', job_id=job_id))
     finally:
         db.close()
 

@@ -1,5 +1,5 @@
 """Sales Pipeline Engine — funnel data, aging, forecast, win/loss analysis."""
-from datetime import date, datetime, timedelta
+from datetime import timezone, date, datetime, timedelta
 from sqlalchemy import func
 from models.quote import Quote
 from models.job import Job
@@ -84,7 +84,7 @@ def _classify_sent(db, quote):
         return 'sent'
     last_comm = db.query(CommunicationLog).filter(
         CommunicationLog.client_id == quote.client_id,
-        CommunicationLog.communication_date >= datetime.utcnow() - timedelta(days=7),
+        CommunicationLog.communication_date >= datetime.now(timezone.utc) - timedelta(days=7),
     ).first()
     return 'sent' if last_comm else 'follow_up'
 
@@ -221,7 +221,7 @@ def _contract_monthly(c):
 
 def get_win_loss_analysis(db, org_id, days=90):
     """Win/loss rates over past N days."""
-    since = datetime.utcnow() - timedelta(days=days)
+    since = datetime.now(timezone.utc) - timedelta(days=days)
     closed = db.query(Quote).filter(
         Quote.organization_id == org_id,
         Quote.status.in_(['converted', 'accepted', 'declined', 'rejected', 'expired']),

@@ -18,7 +18,7 @@
       {% if permit.is_expiring_soon %}<span class="badge badge-pending"><i class="bi bi-exclamation-triangle"></i> Expiring</span>{% endif %}
       {% if permit.is_expired %}<span class="badge badge-danger"><i class="bi bi-x-circle"></i> Expired</span>{% endif %}
     </div>
-    <p class="detail-subtitle">{{ permit.permit_number or 'No number' }} &mdash; <a href="{{ url_for('job_detail', job_id=permit.job_id) }}">{{ permit.job.job_number if permit.job else 'Job #' ~ permit.job_id }}</a></p>
+    <p class="detail-subtitle">{{ permit.permit_number or 'No number' }} &mdash; <a href="{{ url_for('jobs_bp.job_detail', job_id=permit.job_id) }}">{{ permit.job.job_number if permit.job else 'Job #' ~ permit.job_id }}</a></p>
   </div>
   <div class="detail-header-right">
     {% if user.role in ('owner', 'admin', 'dispatcher') %}
@@ -34,7 +34,7 @@
       <div class="card-header"><h3 class="card-title">Permit Details</h3></div>
       <div class="card-body">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);font-size:var(--font-size-sm);">
-          <div><span style="color:var(--color-text-muted);">Job</span><br><a href="{{ url_for('job_detail', job_id=permit.job_id) }}">{{ permit.job.job_number if permit.job else '#' ~ permit.job_id }}{% if permit.job %} -- {{ permit.job.title }}{% endif %}</a></div>
+          <div><span style="color:var(--color-text-muted);">Job</span><br><a href="{{ url_for('jobs_bp.job_detail', job_id=permit.job_id) }}">{{ permit.job.job_number if permit.job else '#' ~ permit.job_id }}{% if permit.job %} -- {{ permit.job.title }}{% endif %}</a></div>
           {% if permit.phase %}<div><span style="color:var(--color-text-muted);">Phase</span><br>Phase {{ permit.phase.phase_number }}: {{ permit.phase.title }}</div>{% endif %}
           <div><span style="color:var(--color-text-muted);">Issuing Authority</span><br><strong>{{ permit.issuing_authority or '---' }}</strong></div>
           <div><span style="color:var(--color-text-muted);">Cost</span><br><strong>{% if permit.cost %}${{ "{:,.2f}".format(permit.cost) }}{% else %}---{% endif %}</strong></div>

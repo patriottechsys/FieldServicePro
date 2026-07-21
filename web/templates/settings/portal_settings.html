@@ -1,91 +1,91 @@
 {% extends "base.html" %}
-{% block title %}Client Portal Settings{% endblock %}
-{% block page_title %}Client Portal Settings{% endblock %}
+
+{% block title %}Portal Settings — Settings{% endblock %}
 
 {% block content %}
-<div style="max-width:900px;">
-    <form method="POST">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);">
-            <!-- Left: General -->
-            <div>
-                <div class="card" style="margin-bottom:var(--space-3);">
-                    <div class="card-header"><h3 class="card-title">General</h3></div>
-                    <div class="card-body">
-                        <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3);">
-                            <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;">
-                                <input type="checkbox" name="portal_enabled" style="accent-color:var(--color-accent);"
-                                       {{ 'checked' if settings.portal_enabled }}>
-                                <strong>Enable Client Portal</strong>
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Session Timeout (minutes)</label>
-                            <input type="number" name="session_timeout_minutes" class="form-control"
-                                   value="{{ settings.session_timeout_minutes }}" min="5" max="480" style="max-width:120px;">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Welcome Message</label>
-                            <textarea name="welcome_message" class="form-control" rows="3">{{ settings.welcome_message or '' }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Payment Instructions</label>
-                            <textarea name="payment_instructions" class="form-control" rows="3">{{ settings.payment_instructions or '' }}</textarea>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label class="form-label">Footer Contact Info</label>
-                            <textarea name="company_contact_info" class="form-control" rows="2">{{ settings.company_contact_info or '' }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div style="margin-bottom:var(--space-4);">
+    <h1 style="margin:0;font-size:var(--font-size-xl);">Portal Settings</h1>
+    <p style="color:var(--color-text-muted);font-size:var(--font-size-sm);margin:var(--space-1) 0 0;">Manage customer self-service portal invitations and settings.</p>
+</div>
 
-            <!-- Right: Features + Email -->
-            <div>
-                <div class="card" style="margin-bottom:var(--space-3);">
-                    <div class="card-header"><h3 class="card-title">Features</h3></div>
-                    <div class="card-body">
-                        {% for field, label in [
-                            ('allow_service_requests', 'Allow Service Requests'),
-                            ('allow_quote_approval', 'Allow Quote Approval'),
-                            ('allow_change_order_approval', 'Allow Change Order Approval'),
-                            ('auto_convert_approved_quotes', 'Auto-convert Approved Quotes to Jobs'),
-                        ] %}
-                        <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-2);">
-                            <input type="checkbox" name="{{ field }}" style="accent-color:var(--color-accent);"
-                                   {{ 'checked' if settings[field] is defined and settings[field] else 'checked' if getattr(settings, field, False) }}>
-                            {{ label }}
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3 class="card-title">Email Notifications</h3></div>
-                    <div class="card-body">
-                        {% for field, label in [
-                            ('email_on_service_request', 'New Service Request'),
-                            ('email_on_quote_approval', 'Quote Approved/Changed'),
-                            ('email_on_co_approval', 'Change Order Approved/Rejected'),
-                            ('email_on_portal_message', 'New Portal Message'),
-                            ('email_on_job_status_change', 'Job Status Change'),
-                            ('email_on_invoice_issued', 'Invoice Issued'),
-                        ] %}
-                        <label style="display:flex;align-items:center;gap:var(--space-2);cursor:pointer;margin-bottom:var(--space-2);">
-                            <input type="checkbox" name="{{ field }}" style="accent-color:var(--color-accent);"
-                                   {{ 'checked' if getattr(settings, field, False) }}>
-                            {{ label }}
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+{% for client in clients %}
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <div style="width:var(--space-8);height:var(--space-8);border-radius:var(--radius-full);background:var(--color-surface-elevated);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--color-text-secondary);font-size:var(--font-size-sm);flex-shrink:0;">
+            {{ client.client_name[:2] | upper }}
         </div>
-
-        <div style="display:flex;justify-content:flex-end;margin-top:var(--space-4);">
-            <button type="submit" class="btn btn-accent">
-                <i class="bi bi-check-circle"></i> Save Settings
-            </button>
+        <span>{{ client.client_name }}</span>
+        <span style="margin-left:auto;font-size:var(--font-size-xs);color:var(--color-text-muted);">{{ client.portal_users | length }} portal user{{ 's' if client.portal_users | length != 1 else '' }}</span>
+    </div>
+    {% if client.portal_users %}
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:2px solid var(--color-border);">
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Email</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Status</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:left;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Role</th>
+                    <th style="padding:var(--space-2) var(--space-3);text-align:right;font-size:var(--font-size-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in client.portal_users %}
+                <tr style="border-bottom:1px solid var(--color-border);">
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--color-text);">{{ user.email }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);">
+                        <span style="display:inline-block;font-size:var(--font-size-xs);font-weight:600;padding:2px 10px;border-radius:999px;{% if user.is_active %}background:rgba(16,185,129,0.1);color:var(--color-success);{% else %}background:var(--color-surface-raised);color:var(--color-text-muted);{% endif %}">
+                            {{ 'Active' if user.is_active else 'Invited' }}
+                        </span>
+                    </td>
+                    <td style="padding:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--color-text-secondary);">{{ user.role.value | title }}</td>
+                    <td style="padding:var(--space-2) var(--space-3);text-align:right;">
+                        <div style="display:flex;gap:var(--space-1);justify-content:flex-end;">
+                            {% if not user.is_active and user.invitation_token %}
+                            <a href="{{ url_for('settings_bp.portal_copy_invite', user_id=user.id) }}" class="btn btn-ghost" style="font-size:var(--font-size-xs);padding:var(--space-1) var(--space-2);" title="Copy invitation link">
+                                <i class="bi bi-clipboard"></i>
+                            </a>
+                            {% endif %}
+                            {% if user.is_active %}
+                            <form method="POST" action="{{ url_for('settings_bp.portal_deactivate', user_id=user.id) }}" style="display:inline;" onsubmit="return confirm('Deactivate this user?')">
+                                <button type="submit" class="btn btn-ghost" style="font-size:var(--font-size-xs);padding:var(--space-1) var(--space-2);color:var(--color-danger);" title="Deactivate">
+                                    <i class="bi bi-person-dash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:var(--font-size-sm);color:var(--color-text-muted);">No portal users invited yet.</span>
+            <a href="{{ url_for('settings_bp.portal_invite', client_id=client.id) }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-person-plus"></i> Invite User</a>
         </div>
-    </form>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% if not clients %}
+<div class="card" style="margin-bottom:var(--space-4);">
+    <div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);">
+        <i class="bi bi-people" style="color:var(--color-accent);"></i>
+        <span>Portal Users</span>
+    </div>
+    <div class="card-body">
+        <div style="padding:var(--space-6);text-align:center;color:var(--color-text-muted);">
+            <i class="bi bi-people" style="font-size:2rem;opacity:0.3;display:block;margin-bottom:var(--space-2);"></i>
+            <p style="font-size:var(--font-size-sm);">No clients yet. Clients will appear here once they are created.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div style="display:flex;gap:var(--space-2);justify-content:flex-end;padding:var(--space-4) 0 0;">
+    <a href="{{ url_for('settings_bp.settings_page') }}" class="btn btn-ghost" style="font-size:var(--font-size-sm);"><i class="bi bi-arrow-left"></i> Back to Settings</a>
 </div>
 {% endblock %}

@@ -38,7 +38,7 @@
 <div class="card" style="padding:var(--space-2) var(--space-3);margin-bottom:var(--space-3);">
     <div style="display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap;">
         <select class="form-control" style="width:auto;min-width:140px;"
-                onchange="window.location.href='{{ url_for('clients_page') }}?type=' + this.value">
+                onchange="window.location.href='{{ url_for('clients_bp.clients_page') }}?type=' + this.value">
             <option value="">All Types</option>
             <option value="commercial" {% if client_type_filter == 'commercial' %}selected{% endif %}>Commercial</option>
             <option value="residential" {% if client_type_filter == 'residential' %}selected{% endif %}>Residential</option>
@@ -48,7 +48,7 @@
             <input type="text" id="clientSearch" class="form-control" placeholder="Search clients..." oninput="filterClients()"
                    style="padding-left:2rem;width:240px;">
         </div>
-        <a class="btn btn-accent" href="{{ url_for('client_new_page') }}">
+        <a class="btn btn-accent" href="{{ url_for('clients_bp.client_new_page') }}">
             <i class="bi bi-plus-lg"></i> New Client
         </a>
     </div>
@@ -114,7 +114,7 @@
             <i class="bi bi-people" style="font-size:3rem;color:var(--color-text-muted);"></i>
             <h3 style="margin:var(--space-2) 0 var(--space-1);">No clients yet</h3>
             <p style="color:var(--color-text-muted);">Add your first client to start creating jobs and quotes</p>
-            <a class="btn btn-accent" href="{{ url_for('client_new_page') }}">
+            <a class="btn btn-accent" href="{{ url_for('clients_bp.client_new_page') }}">
                 <i class="bi bi-plus-lg"></i> Add First Client
             </a>
         </div>

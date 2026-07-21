@@ -1,11 +1,11 @@
 """Expense utility functions."""
-from datetime import date, datetime
+from datetime import timezone, date, datetime
 from sqlalchemy import func
 from models.expense import Expense
 
 
 def generate_expense_number(db):
-    year = datetime.utcnow().year
+    year = datetime.now(timezone.utc).year
     prefix = f"EXP-{year}-"
     last = db.query(Expense).filter(Expense.expense_number.like(f"{prefix}%")).order_by(Expense.id.desc()).first()
     seq = int(last.expense_number.split('-')[-1]) + 1 if last else 1

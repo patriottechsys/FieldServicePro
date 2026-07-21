@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}Client Portal{% endblock %} — FieldServicePro</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -165,6 +166,51 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/portal.js') }}"></script>
+
+    <!-- CSRF token auto-injection for all POST forms + AJAX -->
+    <script>
+    (function() {
+      var token = document.querySelector('meta[name="csrf-token"]');
+      if (!token) return;
+      var csrfValue = token.getAttribute('content');
+
+      document.querySelectorAll('form').forEach(function(form) {
+        if (form.method && form.method.toUpperCase() === 'GET') return;
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'csrf_token';
+        input.value = csrfValue;
+        form.appendChild(input);
+      });
+
+      var origFetch = window.fetch;
+      window.fetch = function() {
+        var args = Array.prototype.slice.call(arguments);
+        if (args[1]) { args[1].headers = args[1].headers || {}; }
+        else { args[1] = { headers: {} }; }
+        if (typeof args[1].headers.set === 'function') {
+          args[1].headers.set('X-CSRFToken', csrfValue);
+        } else {
+          args[1].headers['X-CSRFToken'] = csrfValue;
+        }
+        return origFetch.apply(window, args);
+      };
+
+      var origOpen = XMLHttpRequest.prototype.open;
+      var origSend = XMLHttpRequest.prototype.send;
+      XMLHttpRequest.prototype.open = function() {
+        this._csrfToken = csrfValue;
+        return origOpen.apply(this, arguments);
+      };
+      XMLHttpRequest.prototype.send = function() {
+        if (this._csrfToken && this.method && this.method.toUpperCase() !== 'GET') {
+          this.setRequestHeader('X-CSRFToken', this._csrfToken);
+        }
+        return origSend.apply(this, arguments);
+      };
+    })();
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

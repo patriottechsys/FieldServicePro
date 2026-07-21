@@ -1,5 +1,5 @@
 """Routes for payment records."""
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy import desc, func
@@ -43,7 +43,7 @@ def payment_list():
 
         if date_range:
             days = int(date_range)
-            cutoff = datetime.utcnow() - timedelta(days=days)
+            cutoff = datetime.now(timezone.utc) - timedelta(days=days)
             query = query.filter(Payment.payment_date >= cutoff)
 
         payments = query.order_by(desc(Payment.payment_date)).all()
@@ -79,7 +79,7 @@ def payment_list():
             ]
 
         # Stats
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
         total_all_time = float(db.query(func.coalesce(func.sum(Payment.amount), 0)).join(

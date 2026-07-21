@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb" style="margin: 0;">
-    <li class="breadcrumb-item"><a href="{{ url_for('invoices_page') }}">Invoices</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('invoices_bp.invoices_page') }}">Invoices</a></li>
     <li class="breadcrumb-item active">Bulk Statements</li>
   </ol>
 </nav>
@@ -76,9 +76,9 @@
             </td>
             <td style="text-align: right;">
               <div style="display: flex; gap: 4px; justify-content: flex-end;">
-                <a href="{{ url_for('client_statement', client_id=row.client.id, start_date=start_date.isoformat(), end_date=end_date.isoformat()) }}"
+                <a href="{{ url_for('clients_bp.client_statement', client_id=row.client.id, start_date=start_date.isoformat(), end_date=end_date.isoformat()) }}"
                    target="_blank" class="btn btn-sm btn-ghost"><i class="bi bi-eye"></i> View</a>
-                <a href="{{ url_for('client_statement', client_id=row.client.id, start_date=start_date.isoformat(), end_date=end_date.isoformat(), format='pdf') }}"
+                <a href="{{ url_for('clients_bp.client_statement', client_id=row.client.id, start_date=start_date.isoformat(), end_date=end_date.isoformat(), format='pdf') }}"
                    class="btn btn-sm btn-ghost" style="color: var(--color-danger);"><i class="bi bi-file-pdf"></i></a>
                 {% if row.billing_email %}
                 <button class="btn btn-sm btn-ghost btn-email-one" style="color: var(--color-success);"

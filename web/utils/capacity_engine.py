@@ -85,9 +85,8 @@ def get_capacity_data(db, org_id, start, end, division_id=None):
             is_working = d.weekday() in wd
             avail = hpd if is_working else 0.0
             day_jobs = job_map.get(tech.id, {}).get(d, [])
-            booked = sum(float(getattr(j, 'estimated_amount', 0) or hpd) for j in day_jobs)
-            # Use hpd as default since Job has no estimated_hours
-            booked = min(booked, len(day_jobs) * hpd) if day_jobs else 0
+            # Each job consumes one day's worth of hours (Job has no estimated_hours field)
+            booked = len(day_jobs) * hpd if day_jobs else 0
 
             row['days'][d.isoformat()] = {
                 'date': d.isoformat(),

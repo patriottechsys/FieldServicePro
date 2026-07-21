@@ -7,6 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="FieldServicePro">
   <meta name="description" content="FieldServicePro — Field Service Management">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{% block title %}FieldServicePro{% endblock %} — FieldServicePro</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><rect width='28' height='28' rx='7' fill='%230d9488'/><path d='M7 10h14M7 14h10M7 18h7' stroke='%23fff' stroke-width='2' stroke-linecap='round'/><circle cx='21' cy='18' r='3' fill='%23f59e0b'/></svg>">
 
@@ -29,6 +30,9 @@
   {% block head %}{% endblock %}
 </head>
 <body>
+
+<!-- Skip to content (accessibility) -->
+<a href="#mainContent" class="skip-link">Skip to main content</a>
 
 <!-- Flash Messages (toast-style) -->
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -94,7 +98,7 @@
             </h6></li>
             <li><hr class="dropdown-divider"></li>
             <li>
-              <a class="dropdown-item" href="{{ url_for('settings_page') }}">
+              <a class="dropdown-item" href="{{ url_for('settings_bp.settings_page') }}">
                 <i class="bi bi-gear" aria-hidden="true"></i> Settings
               </a>
             </li>
@@ -114,11 +118,11 @@
     {% set ep_map = {
         'dashboard': 'dashboard',
         'schedule': 'schedule_page',
-        'jobs': 'jobs_page',
-        'quotes': 'quotes_page',
-        'clients': 'clients_page',
-        'invoices': 'invoices_page',
-        'settings': 'settings_page',
+        'jobs': 'jobs_bp.jobs_page',
+        'quotes': 'quotes_bp.quotes_page',
+        'clients': 'clients_bp.clients_page',
+        'invoices': 'invoices_bp.invoices_page',
+        'settings': 'settings_bp.settings_page',
         'notifications': 'notifications.notification_center',
         'change_orders': 'change_orders.co_list',
         'vendors': 'vendors.vendor_list',
@@ -225,6 +229,52 @@
 })();
 </script>
 
+<!-- CSRF token auto-injection for all POST forms + AJAX -->
+<script>
+(function() {
+  var token = document.querySelector('meta[name="csrf-token"]');
+  if (!token) return;
+  var csrfValue = token.getAttribute('content');
+
+  // Inject hidden input into every form on page
+  document.querySelectorAll('form').forEach(function(form) {
+    if (form.method && form.method.toUpperCase() === 'GET') return;
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'csrf_token';
+    input.value = csrfValue;
+    form.appendChild(input);
+  });
+
+  // Set default X-CSRFToken header for fetch/XMLHttpRequest
+  var origFetch = window.fetch;
+  window.fetch = function() {
+    var args = Array.prototype.slice.call(arguments);
+    if (args[1]) { args[1].headers = args[1].headers || {}; }
+    else { args[1] = { headers: {} }; }
+    if (typeof args[1].headers.set === 'function') {
+      args[1].headers.set('X-CSRFToken', csrfValue);
+    } else {
+      args[1].headers['X-CSRFToken'] = csrfValue;
+    }
+    return origFetch.apply(window, args);
+  };
+
+  var origOpen = XMLHttpRequest.prototype.open;
+  var origSend = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.open = function() {
+    this._csrfToken = csrfValue;
+    return origOpen.apply(this, arguments);
+  };
+  XMLHttpRequest.prototype.send = function() {
+    if (this._csrfToken && this.method && this.method.toUpperCase() !== 'GET') {
+      this.setRequestHeader('X-CSRFToken', this._csrfToken);
+    }
+    return origSend.apply(this, arguments);
+  };
+})();
+</script>
+
 {% block scripts %}{% endblock %}
 
 {# Quick Communication Log — global modal + FAB #}
@@ -240,5 +290,73 @@
 <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
 {% endif %}
 {% include 'partials/mobile_banner.html' %}
+
+<!-- Phase 8: UX polish utilities -->
+<style>
+/* Skip-to-content link */
+.skip-link{position:absolute;top:-100%;left:var(--space-4);padding:var(--space-2) var(--space-4);background:var(--color-accent);color:#fff;border-radius:0 0 var(--radius-md) var(--radius-md);z-index:10000;font-weight:600;text-decoration:none;transition:top .2s;}
+.skip-link:focus{top:0;}
+
+/* Spinner utility */
+.spinner{display:inline-block;width:1em;height:1em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;}
+.spinner-sm{width:.75em;height:.75em;border-width:1.5px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Button loading state */
+.btn.is-loading{pointer-events:none;opacity:.7;}
+.btn.is-loading::after{content:"";display:inline-block;width:1em;height:1em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .6s linear infinite;margin-left:var(--space-2);vertical-align:middle;}
+
+/* Focus visible for keyboard users */
+:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+/* Responsive tables: prevent horizontal overflow on mobile */
+@media(max-width:768px){
+  .data-table,.table,table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  .card-header{flex-wrap:wrap;}
+}
+</style>
+
+<script>
+/* Modal focus trap + keyboard close */
+(function(){
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape')return;
+    var m=document.querySelector('.modal-overlay.show,.modal.show,[role="dialog"]:not([aria-hidden="true"])');
+    if(m){m.classList.remove('show');m.style.display='none';}
+  });
+  document.addEventListener('click',function(e){
+    var o=e.target.closest('.modal-overlay');
+    if(o&&o===e.target){o.classList.remove('show');o.style.display='none';}
+  });
+})();
+
+/* Button loading state helper */
+window.setBtnLoading=function(btn,loading){
+  if(!btn)return;
+  if(loading){btn.classList.add('is-loading');btn.setAttribute('aria-busy','true');}
+  else{btn.classList.remove('is-loading');btn.removeAttribute('aria-busy');}
+};
+
+/* Auto-dismiss toasts with progress */
+(function(){
+  var toasts=document.querySelectorAll('.flash-message');
+  toasts.forEach(function(el){
+    var dur=5000;
+    var bar=document.createElement('div');
+    bar.style.cssText='position:absolute;bottom:0;left:0;height:3px;background:var(--color-accent);border-radius:0 0 var(--radius-md) var(--radius-md);transition:width '+dur+'ms linear;width:100%;';
+    el.style.position='relative';el.style.overflow='hidden';el.appendChild(bar);
+    setTimeout(function(){bar.style.width='0';},50);
+    setTimeout(function(){
+      el.style.transition='opacity .3s ease,transform .3s ease';
+      el.style.opacity='0';el.style.transform='translateX(1rem)';
+      setTimeout(function(){el.remove();},300);
+    },dur);
+  });
+})();
+</script>
 </body>
 </html>

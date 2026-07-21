@@ -1,5 +1,5 @@
 """Time tracking utilities: clock in/out, validation, cost computation, summaries."""
-from datetime import datetime, date, timedelta
+from datetime import timezone, datetime, date, timedelta
 from sqlalchemy import func
 from models.database import get_session
 from models.time_entry import TimeEntry, ActiveClock
@@ -36,7 +36,7 @@ def clock_in(technician_id, job_id, phase_id=None, notes=None):
             technician_id=technician_id,
             job_id=job_id,
             phase_id=phase_id,
-            clock_in_time=datetime.utcnow(),
+            clock_in_time=datetime.now(timezone.utc),
             notes=notes,
         )
         db.add(clock)
@@ -45,7 +45,7 @@ def clock_in(technician_id, job_id, phase_id=None, notes=None):
         if job.status == 'scheduled':
             job.status = 'in_progress'
             if not job.started_at:
-                job.started_at = datetime.utcnow()
+                job.started_at = datetime.now(timezone.utc)
 
         db.commit()
         return clock, None
@@ -64,7 +64,7 @@ def clock_out(technician_id, description=None, entry_type='regular'):
         if not clock:
             return None, "Not currently clocked in."
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         elapsed = (now - clock.clock_in_time).total_seconds()
         duration = min(round(elapsed / 3600, 2), 16)  # Cap at 16 hours
 
@@ -161,7 +161,7 @@ def approve_entries(entry_ids, approved_by_user_id):
         entries = db.query(TimeEntry).filter(
             TimeEntry.id.in_(entry_ids), TimeEntry.status == 'submitted'
         ).all()
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         count = 0
         for e in entries:
             e.status = 'approved'
@@ -180,7 +180,7 @@ def reject_entries(entry_ids, rejected_by_user_id, reason):
         entries = db.query(TimeEntry).filter(
             TimeEntry.id.in_(entry_ids), TimeEntry.status == 'submitted'
         ).all()
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         count = 0
         for e in entries:
             e.status = 'rejected'
