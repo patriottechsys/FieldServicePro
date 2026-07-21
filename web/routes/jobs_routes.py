@@ -175,7 +175,7 @@ def create_job():
             from models.contract import Contract
             contract = db.query(Contract).filter_by(id=int(manual_contract_id)).first()
         else:
-            from web.utils.contract_automation import detect_contract_for_job
+            from web.utils.sla_engine import detect_contract_for_job
             contract = detect_contract_for_job(db, obj.client_id, obj.property_id)
         if contract:
             from web.utils.sla_engine import detect_sla_for_job, apply_sla_to_job

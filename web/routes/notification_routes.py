@@ -369,8 +369,8 @@ def notification_log():
         if date_from:
             query = query.filter(NotificationLog.created_at >= datetime.strptime(date_from, '%Y-%m-%d'))
         if date_to:
-            from datetime import timezone, timedelta
-            query = query.filter(NotificationLog.created_at < datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1))
+            from datetime import timedelta as _td
+            query = query.filter(NotificationLog.created_at < datetime.strptime(date_to, '%Y-%m-%d') + _td(days=1))
         if search:
             query = query.filter(
                 NotificationLog.recipient_email.ilike(f'%{search}%') |
