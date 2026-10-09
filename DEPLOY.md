@@ -52,7 +52,7 @@ Open the web service → **Environment** tab and set:
 | Variable | Required? | Value |
 |---|---|---|
 | `DATABASE_URL` | **YES** | Internal Connection String from Step 1 |
-| `ANTHROPIC_API_KEY` | optional | Anthropic API key — enables AI chat panel |
+| `ANTHROPIC_API_KEY` | optional | Shared Anthropic API key (see below) — enables AI chat panel |
 | `MAIL_SERVER` | optional | SMTP host (e.g. `smtp.sendgrid.net`) |
 | `MAIL_PORT` | optional | usually `587` |
 | `MAIL_USE_TLS` | optional | `true` |
@@ -61,6 +61,15 @@ Open the web service → **Environment** tab and set:
 | `MAIL_DEFAULT_SENDER` | optional | `noreply@yourdomain.com` |
 
 Without `ANTHROPIC_API_KEY` the AI chat returns 503 (graceful).
+
+**LLM API key:** the key is the shared secret `Demo-Apps-Share-API-Key` in Azure Key Vault `kv-demo-apps-shared` (subscription "Demo Apps"). Fetch it with:
+
+```
+az keyvault secret show --vault-name kv-demo-apps-shared --name Demo-Apps-Share-API-Key --subscription "Demo Apps" --query value -o tsv
+```
+
+The model defaults to `claude-sonnet-5-5` (override with `CLAUDE_MODEL`).
+
 Without `MAIL_*` all emails log to console only (no failure).
 
 Click **Save Changes** — Render will redeploy.

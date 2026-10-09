@@ -12,7 +12,7 @@ class ClaudeClient:
         if not api_key:
             raise ValueError("ANTHROPIC_API_KEY environment variable is required")
         self.client = anthropic.Anthropic(api_key=api_key)
-        self.model = os.environ.get('CLAUDE_MODEL', 'claude-sonnet-4-20250514')
+        self.model = os.environ.get('CLAUDE_MODEL', 'claude-sonnet-5-5')
 
     def chat(self, system_prompt, messages, max_tokens=2048):
         """Send a chat request and return the full response."""

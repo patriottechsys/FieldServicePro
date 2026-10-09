@@ -45,6 +45,7 @@ services:
         sync: false
 
       # Anthropic API key — required for AI chat panel; leave unset to disable.
+      # Value comes from Key Vault secret Demo-Apps-Share-API-Key (kv-demo-apps-shared); set it in the Render dashboard.
       - key: ANTHROPIC_API_KEY
         sync: false
 
